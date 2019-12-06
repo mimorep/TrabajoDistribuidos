@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	
+	
+	<!ELEMENT baseDatosBibliotecas (biblioteca+)>
+		<!ELEMENT biblioteca (nombre, localizacion, usuario+)>
+			<!ELEMENT nombre (#PCDATA)>
+			<!ELEMENT localizacion (#PCDATA)>
+			<!ELEMENT usuario EMPTY>
+				<!ATTLIST usuario
+						cuasi CDATA #REQUIRED
+						pwd CDATA #REQUIRED
+				>

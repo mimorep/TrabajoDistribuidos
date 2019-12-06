@@ -1,12 +1,12 @@
-package Cliente;
+package servidor;
 
-public class Cliente {
+public class Servidor {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-
 		
-		//aqui se desarrollara el cliente
+		
+		//aqui se desarrollara el servidor
 	}
 
 }

@@ -1,4 +1,4 @@
-package Cliente;
+package cliente;
 
 public class Hilo {
 
