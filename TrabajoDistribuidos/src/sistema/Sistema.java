@@ -21,8 +21,12 @@ import bd.Biblioteca;
 import bd.Usuario;
 
 public class Sistema {
-
-	public static void main(String[] args) {
+	
+	private List<Biblioteca> listaBibliotecas;
+	
+	
+	//Metodo que genera nuestra base de datos a partir del xml indicado
+	public void generarBD() {
 		// TODO Auto-generated method stub
 		
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
@@ -32,7 +36,7 @@ public class Sistema {
 			db = dbf.newDocumentBuilder();
 			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
 			
-			List<Biblioteca> listaBibliotecas = new ArrayList<Biblioteca>();
+			this.listaBibliotecas = new ArrayList<Biblioteca>();
 			Element raiz = doc.getDocumentElement(); //obtenemos el nodo raiz
 			NodeList hijos = raiz.getElementsByTagName("biblioteca"); //obtenemos una lista con todas las bibliotecas
 			
@@ -68,12 +72,12 @@ public class Sistema {
 					}
 					if(n!=null && l != null) {
 						b = new Biblioteca(n, l, usuarios);
-						listaBibliotecas.add(b); //aniadimos la biblioteca a la lista de bibliotecas
+						this.listaBibliotecas.add(b); //aniadimos la biblioteca a la lista de bibliotecas
 					}
 					
 				}//si no es un nodo no hacemos nada con el
 			}
-			
+			// en este punto ya tenemos la BD lista para ser utilizada
 			for(int i=0;i<listaBibliotecas.size();i++) {
 				System.out.println("--------------------------------");
 				System.out.println(listaBibliotecas.get(i).toString());
@@ -88,6 +92,20 @@ public class Sistema {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	public Boolean autenticarse(String nombreBiblioteca,String nombre, String pwd) {
+		Boolean resultado = false;
+		for(int i=0;i<this.listaBibliotecas.size();i++) {
+			if(this.listaBibliotecas.get(i).getNombre().equals(nombreBiblioteca)) { //si es la biblioteca especificada
+				List<bd.Usuario> lu = this.listaBibliotecas.get(i).getUsuarios();
+				for(int j=0;j<lu.size();j++) { //recorremos la lista de usuarios de la biblioteca
+					if((lu.get(j).getCuasi().equals(nombre)) && (lu.get(j).getCuasi().equals(pwd))) { //si coinciden usuario y contrasenia
+						resultado = true;
+					}
+				}
+			}
+		}
+		return resultado;
 	}
 
 }
