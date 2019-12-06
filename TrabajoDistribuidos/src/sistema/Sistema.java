@@ -24,6 +24,10 @@ public class Sistema {
 	
 	private List<Biblioteca> listaBibliotecas;
 	
+	//el constructor llama al metodo generarBD que se encarga de inicializar la Bd
+	public Sistema() {
+		this.generarBD();
+	}
 	
 	//Metodo que genera nuestra base de datos a partir del xml indicado
 	public void generarBD() {
