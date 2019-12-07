@@ -7,7 +7,10 @@ import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.Map;
 
+import bd.Usuario;
 import sistema.Sistema;
 
 public class Servidor {
@@ -15,8 +18,18 @@ public class Servidor {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Sistema s = new Sistema();
+		Map<Integer, Usuario> sitiosUR = new HashMap<Integer, Usuario>(); //La Rioja
+		Map<Integer, Usuario> sitiosS = new HashMap<Integer, Usuario>();	//Salamanca
 		
-		//vamos a tener un Map que tenga los sitios numerados junto con los usuarios que han reservado el sitio
+		//construimso los mapas con todos los sitios de la bibloteca y con el usuario a null
+		Usuario u = null;
+		for(int i=0;i<67;i++) {
+			sitiosUR.put(i, u);
+		}
+		for(int j=0;j<170;j++) {
+			sitiosS.put(j, u);
+		}
+		
 		
 		try(ServerSocket server = new ServerSocket(7777);){
 			
