@@ -1,7 +1,12 @@
 package servidor;
 
-import sistema.Sistema;
-import interfazUsuario.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import bd.Usuario;
 
 public class Servidor {
 
@@ -10,15 +15,28 @@ public class Servidor {
 		
 		//vamos a tener un Map que tenga los sitios numerados junto con los usuarios que han reservado el sitio
 		
+		try(ServerSocket server = new ServerSocket(7777);){
+			
+			while(true) {
+				try(Socket cliente = server.accept();
+					BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));){
+					
+					String linea, usuario = "", pwd = "";
+					if((linea = bf.readLine()) != null) {
+						String[] usuarioPWD = linea.split(" ");
+						usuario = usuarioPWD[0];
+						pwd = usuarioPWD[1];
+					}
+					System.out.println("Usuario: " + usuario);
+					System.out.println("Contrasenia: " + pwd);
+				}
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
-		Sistema s = new Sistema(); //creamos e inicializamos la BD
-		
-		/*
-		System.out.println(s.autenticarse("Universidad de la Rioja", "mimorep", "mp"));
-		s.aniadir("Universidad de la Rioja", "nuevo", "no");
-		System.out.println(s.autenticarse("Universidad de la Rioja", "nuevo", "no"));
-		*/
-		s.eliminar("Universidad de la Rioja", "nuevo");
 		
 		
 		

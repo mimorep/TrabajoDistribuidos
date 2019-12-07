@@ -58,7 +58,6 @@ public class InterfazInicio extends JFrame {
 	}
 	
 	public void run() {
-		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -69,17 +68,24 @@ public class InterfazInicio extends JFrame {
 				}
 			}
 		});
-		
+		int n = this.getImagen();
+		while(n==9999) {
+			n = this.getImagen();
+		}
 	}
 	public void lanzarInterfaz() {
 		int n = 0;
 		String nombre = (String)this.cBUniversidades.getSelectedItem();
 		if(nombre.contains("Rioja")) {
 			n = 0;
+			InterfazBienvenida ib = new InterfazBienvenida(n);
+			ib.run(n);
 		}else if(nombre.contains("Salamanca")){
 			n = 1;
+			InterfazBienvenida ibb = new InterfazBienvenida(n);
+			ibb.run(n);
 		}
-		this.setImagen(n);
+		this.setVisible(false);
 	}
 	public Integer getImagen() {
 		return this.imagen;
