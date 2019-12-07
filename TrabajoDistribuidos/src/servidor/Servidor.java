@@ -39,7 +39,6 @@ public class Servidor {
 		
 		
 		
-		
 		//el servidor se va a quedar esperando y se va a encargar de mostrarle la interfaz a cada uno de los clientes que le vayan pidiendo actuar.
 		
 		//aqui se desarrollara el servidor
