@@ -5,6 +5,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
@@ -17,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
+import java.awt.Color;
 
 public class InterfazBienvenida extends JFrame {
 
@@ -26,6 +28,7 @@ public class InterfazBienvenida extends JFrame {
 	private JButton btnIniciarSesion;
 	private JPasswordField pFContrasenia;
 	private JLabel lblNewLabel;
+	private JLabel lbError;
 	
 
 
@@ -60,7 +63,7 @@ public class InterfazBienvenida extends JFrame {
 		
 		btnIniciarSesion = new JButton("Iniciar Sesion");
 		btnIniciarSesion.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		btnIniciarSesion.setBounds(233, 407, 130, 23);
+		btnIniciarSesion.setBounds(233, 422, 130, 23);
 		contentPane.add(btnIniciarSesion);
 		
 		this.btnIniciarSesion.addActionListener(new ActionListener() {
@@ -85,6 +88,13 @@ public class InterfazBienvenida extends JFrame {
 			lblNewLabel.setBounds(270, 11, 260, 170);
 		}
 		contentPane.add(lblNewLabel);
+		
+		lbError = new JLabel("Usuario o contrase\u00F1a incorrecto");
+		lbError.setForeground(Color.RED);
+		lbError.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		lbError.setBounds(233, 381, 309, 30);
+		contentPane.add(lbError);
+		lbError.setVisible(false);
 	}
 	public void run(int n) {
 		EventQueue.invokeLater(new Runnable() {
@@ -112,12 +122,25 @@ public class InterfazBienvenida extends JFrame {
 	//metodo que se va a encargar de mandar tanto el usuario como la contrasenia al servidor
 	public void mandarDatosAlServer() {
 		try(Socket cliente = new Socket("localhost", 7777);
-				DataOutputStream outSocket = new DataOutputStream(cliente.getOutputStream())){
+				DataOutputStream outSocket = new DataOutputStream(cliente.getOutputStream());
+				DataInputStream inSocket = new DataInputStream(cliente.getInputStream())){
 			
 			String send = this.getUsuario() + " " + this.getPwd() + "\r\n"; //lo mandamos separado con un espacio para que el servidor lo splitee
 			outSocket.writeBytes(send);
 			outSocket.flush();
 			//hay que continuar por que este recivira una respuesta del server y con ella lanzara una interfaz u otra
+			String s = inSocket.readLine();//leemos lo que nos manda el server
+			if(s.equals("isroot")) {
+				System.out.println("Es un root");
+			}else if(s.equals("isbiblio")){
+				System.out.println("es un bilio");
+			}else if(s.equals("notvalidated")){
+				//mostar label de que no estas en la BD
+				System.out.println("NO ESTAS EN EL SISTEMA");
+				this.lbError.setVisible(true);
+			}else {
+				System.out.println("es normal");
+			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
