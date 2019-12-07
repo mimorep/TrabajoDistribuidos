@@ -105,10 +105,10 @@ public class InterfazBienvenida extends JFrame {
 		usuario = this.tFUsuario.getText();
 		pwd = this.pFContrasenia.getText();
 	}
-	public String getusuario() {
+	public String getUsuario() {
 		return this.usuario;
 	}
-	public String getpwd() {
+	public String getPwd() {
 		return this.pwd;
 	}
 }

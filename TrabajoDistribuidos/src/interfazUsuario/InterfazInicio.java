@@ -19,7 +19,8 @@ public class InterfazInicio extends JFrame {
 	private JPanel contentPane;
 	private JButton bEntrar;
 	private JComboBox<String> cBUniversidades;
-	private InterfazBienvenida i;
+	
+	private int imagen = 9999; 
 
 	/**
 	 * Create the frame.
@@ -47,6 +48,7 @@ public class InterfazInicio extends JFrame {
 			}
 		});
 		
+		
 		cBUniversidades = new JComboBox();
 		cBUniversidades.setBounds(252, 186, 254, 20);
 		contentPane.add(cBUniversidades);
@@ -56,6 +58,7 @@ public class InterfazInicio extends JFrame {
 	}
 	
 	public void run() {
+		
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
@@ -66,6 +69,7 @@ public class InterfazInicio extends JFrame {
 				}
 			}
 		});
+		
 	}
 	public void lanzarInterfaz() {
 		int n = 0;
@@ -75,19 +79,13 @@ public class InterfazInicio extends JFrame {
 		}else if(nombre.contains("Salamanca")){
 			n = 1;
 		}
-		this.i = new InterfazBienvenida(n);
-		this.i.run(n); //para que se lanze la nueva interfaz
-		this.setVisible(false);
+		this.setImagen(n);
 	}
-	public String obtenerUsuario() throws NullPointerException{
-		if(this.i == null) {
-			//mientras que no se construya la interfaz este metodo se queda a la espera
-			//return null;
-		}
-		return this.i.getusuario();
+	public Integer getImagen() {
+		return this.imagen;
 	}
-	public String obtenerpwd() {
-		return this.i.getpwd();
+	public void setImagen(int n) {
+		this.imagen = n;
 	}
 	
 }
