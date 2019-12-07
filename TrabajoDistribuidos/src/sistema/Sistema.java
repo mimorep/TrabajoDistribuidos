@@ -137,6 +137,7 @@ public class Sistema {
 						if(((Element) nombr.item(0)).getTextContent().equals(nombreBiblioteca)){
 							//si se cumple esa condicion es por que es la biblioteca que buscamos
 							biblioteca = hijo;
+							//biblioteca.removeChild(oldChild) lo que necesito para eliminar un elemento 
 						}
 					}
 				}
@@ -171,8 +172,70 @@ public class Sistema {
 		
 		
 	}
-	public void eliminar(String nombreBiblioteca, String nombre, String pwd) {
-		
+	public void eliminar(String nombreBiblioteca, String nombre) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
+			//creamos un atributo como el que queremos eliminar
+			Element alumnoElimninar = null;
+			Element biblio = null;
+			
+			Element raiz = doc.getDocumentElement(); //obtenemos el nodo raiz
+			NodeList hijos = raiz.getElementsByTagName("biblioteca");
+			for(int i=0;i<hijos.getLength();i++) {
+				//comprobamos que el primero es un nodo
+				if(hijos.item(i).getNodeType() == Node.ELEMENT_NODE) {
+					Element hijo = (Element) hijos.item(i);
+					NodeList nombr = hijo.getElementsByTagName("nombre"); //vamos a buscar la biblioteca por nombre
+					
+					if(nombr.getLength() == 1) { //si no es uno es por que hay algun error
+						if(((Element) nombr.item(0)).getTextContent().equals(nombreBiblioteca)){
+							//si se cumple esa condicion es por que es la biblioteca que buscamos
+							biblio = hijo;
+							NodeList alumnos = hijo.getElementsByTagName("usuario"); //obtenemos todos los hijos de la biblioteca
+							for(int j=0;j<alumnos.getLength();j++) {
+								//comprobamos que es un nodo
+								if(alumnos.item(j).getNodeType() == Node.ELEMENT_NODE) {
+									Element alumno = (Element) alumnos.item(j);
+									String cuasi = alumno.getAttribute("cuasi").toString();
+									if(cuasi.equals(nombre)) { //comprobamos que la cuasi del alumno coincide con la que estamos buscando
+										alumnoElimninar = alumno;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+			//en este punto tenemos en alumno el que queremos eliminar
+			biblio.removeChild(alumnoElimninar);
+			//ahora tenemos que reconstruirlo para que los cambios sean visibles
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File("src/xml/BDUsuarios.xml"));
+			transformer.transform(source, result);
+			
+			this.generarBD(); //volvemos a generar la BD para que este actualizada a la hora de usarla
+			
+			
+		}catch(ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }
