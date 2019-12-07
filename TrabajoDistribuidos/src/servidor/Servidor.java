@@ -9,8 +9,11 @@ public class Servidor {
 		// TODO Auto-generated method stub
 		
 		Sistema s = new Sistema(); //creamos e inicializamos la BD
-		InterfazInicio i = new InterfazInicio();
-		i.run();
+		
+		System.out.println(s.autenticarse("Universidad de la Rioja", "mimorep", "mp"));
+		s.aniadir("Universidad de la Rioja", "nuevo", "no");
+		System.out.println(s.autenticarse("Universidad de la Rioja", "nuevo", "no"));
+		
 		
 		
 		

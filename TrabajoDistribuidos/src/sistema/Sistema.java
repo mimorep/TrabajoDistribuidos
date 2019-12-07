@@ -8,8 +8,12 @@ import java.util.List;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -82,10 +86,7 @@ public class Sistema {
 				}//si no es un nodo no hacemos nada con el
 			}
 			// en este punto ya tenemos la BD lista para ser utilizada
-			for(int i=0;i<listaBibliotecas.size();i++) {
-				System.out.println("--------------------------------");
-				System.out.println(listaBibliotecas.get(i).toString());
-			}
+		
 			
 		}catch(ParserConfigurationException e) {
 			e.printStackTrace();
@@ -103,13 +104,75 @@ public class Sistema {
 			if(this.listaBibliotecas.get(i).getNombre().equals(nombreBiblioteca)) { //si es la biblioteca especificada
 				List<bd.Usuario> lu = this.listaBibliotecas.get(i).getUsuarios();
 				for(int j=0;j<lu.size();j++) { //recorremos la lista de usuarios de la biblioteca
-					if((lu.get(j).getCuasi().equals(nombre)) && (lu.get(j).getCuasi().equals(pwd))) { //si coinciden usuario y contrasenia
+					if((lu.get(j).getCuasi().equals(nombre)) && (lu.get(j).getPwd().equals(pwd))) { //si coinciden usuario y contrasenia
 						resultado = true;
 					}
 				}
 			}
 		}
 		return resultado;
+	}
+	public void aniadir(String nombreBiblioteca, String nombre, String pwd) {
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder db;
+		try {
+			db = dbf.newDocumentBuilder();
+			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
+			Element alumnoNuevo = doc.createElement("usuario");
+			
+			alumnoNuevo.setAttribute("cuasi", nombre);
+			alumnoNuevo.setAttribute("pwd", pwd);
+			//en este punto tenemos que obtener el campo que corresponde con la biblioteca para hacele un append
+			Element biblioteca = null;
+
+			Element raiz = doc.getDocumentElement(); //obtenemos el nodo raiz
+			NodeList hijos = raiz.getElementsByTagName("biblioteca");
+			for(int i=0;i<hijos.getLength();i++) {
+				//comprobamos que el primero es un nodo
+				if(hijos.item(i).getNodeType() == Node.ELEMENT_NODE) {
+					Element hijo = (Element) hijos.item(i);
+					NodeList nombr = hijo.getElementsByTagName("nombre"); //vamos a buscar la biblioteca por nombre
+					
+					if(nombr.getLength() == 1) { //si no es uno es por que hay algun error
+						if(((Element) nombr.item(0)).getTextContent().equals(nombreBiblioteca)){
+							//si se cumple esa condicion es por que es la biblioteca que buscamos
+							biblioteca = hijo;
+						}
+					}
+				}
+			}
+			//en este punto tenemos en bilioteca a la que le queremos aniadir el nuevo alumno
+			biblioteca.appendChild(alumnoNuevo);
+			
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File("src/xml/BDUsuarios.xml"));
+			transformer.transform(source, result);
+			
+			this.generarBD(); //volvemos a generar la BD para que este actualizada a la hora de usarla
+			
+		}catch(ParserConfigurationException e) {
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		
+	}
+	public void eliminar(String nombreBiblioteca, String nombre, String pwd) {
+		
 	}
 
 }

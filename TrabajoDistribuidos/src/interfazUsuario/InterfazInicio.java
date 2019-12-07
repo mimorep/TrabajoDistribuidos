@@ -19,6 +19,7 @@ public class InterfazInicio extends JFrame {
 	private JPanel contentPane;
 	private JButton bEntrar;
 	private JComboBox<String> cBUniversidades;
+	private InterfazBienvenida i;
 
 	/**
 	 * Create the frame.
@@ -74,10 +75,19 @@ public class InterfazInicio extends JFrame {
 		}else if(nombre.contains("Salamanca")){
 			n = 1;
 		}
-		InterfazBienvenida i = new InterfazBienvenida(n);
-		i.run(n); //para que se lanze la nueva interfaz
+		this.i = new InterfazBienvenida(n);
+		this.i.run(n); //para que se lanze la nueva interfaz
 		this.setVisible(false);
-		
+	}
+	public String obtenerUsuario() throws NullPointerException{
+		if(this.i == null) {
+			//mientras que no se construya la interfaz este metodo se queda a la espera
+			//return null;
+		}
+		return this.i.getusuario();
+	}
+	public String obtenerpwd() {
+		return this.i.getpwd();
 	}
 	
 }

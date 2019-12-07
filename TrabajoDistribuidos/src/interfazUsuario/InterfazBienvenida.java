@@ -7,6 +7,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JTextField;
 import javax.swing.JLabel;
 import javax.swing.JButton;
@@ -17,11 +20,14 @@ import javax.swing.ImageIcon;
 public class InterfazBienvenida extends JFrame {
 
 	private JPanel contentPane;
-	private JTextField textField;
+	private JTextField tFUsuario;
 	private JLabel lblContrasea;
 	private JButton btnIniciarSesion;
-	private JPasswordField passwordField;
+	private JPasswordField pFContrasenia;
 	private JLabel lblNewLabel;
+	
+	//atributos externos al diseño
+	private String usuario = "", pwd = "";
 
 
 	/**
@@ -38,10 +44,10 @@ public class InterfazBienvenida extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		textField = new JTextField();
-		textField.setBounds(233, 241, 309, 34);
-		contentPane.add(textField);
-		textField.setColumns(10);
+		tFUsuario = new JTextField();
+		tFUsuario.setBounds(233, 241, 309, 34);
+		contentPane.add(tFUsuario);
+		tFUsuario.setColumns(10);
 		
 		JLabel lblNombreDeUsuario = new JLabel("Nombre de Usuario");
 		lblNombreDeUsuario.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -58,9 +64,19 @@ public class InterfazBienvenida extends JFrame {
 		btnIniciarSesion.setBounds(233, 407, 130, 23);
 		contentPane.add(btnIniciarSesion);
 		
-		passwordField = new JPasswordField();
-		passwordField.setBounds(233, 334, 309, 34);
-		contentPane.add(passwordField);
+		this.btnIniciarSesion.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				getCuasipwd(usuario, pwd);
+				//aniadir el lanzar interfaz de opciones
+				
+			}
+		});
+		
+		pFContrasenia = new JPasswordField();
+		pFContrasenia.setBounds(233, 334, 309, 34);
+		contentPane.add(pFContrasenia);
 		
 		lblNewLabel = new JLabel("");
 		if(imagen == 0) {
@@ -83,5 +99,16 @@ public class InterfazBienvenida extends JFrame {
 				}
 			}
 		});
+	}
+	//metodo que almacena en los atributos que se pasan como parametros los valores de usuario y contrasenia
+	public void getCuasipwd(String usuario, String pwd) {
+		usuario = this.tFUsuario.getText();
+		pwd = this.pFContrasenia.getText();
+	}
+	public String getusuario() {
+		return this.usuario;
+	}
+	public String getpwd() {
+		return this.pwd;
 	}
 }

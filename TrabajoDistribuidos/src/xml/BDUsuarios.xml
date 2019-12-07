@@ -1,19 +1,14 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE baseDatosBibliotecas SYSTEM "dtdBD.dtd" >
-<baseDatosBibliotecas>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><baseDatosBibliotecas>
   <biblioteca>
     <nombre>Universidad de la Rioja</nombre>
     <localizacion>La Rioja</localizacion>
-    <usuario cuasi="rootRioja" pwd="root" /><usuario cuasi="bibliotecariaR1" pwd="b1" /><usuario
-  		cuasi='bibliotecariaR2' pwd="b2" />
-  	<usuario cuasi="mimorep" pwd="mp"/><usuario cuasi="dirudiez" pwd="dz" ></usuario><usuario
-  		cuasi="jaclavij" pwd="jj" /><usuario cuasi="seleiva" pwd="sa" />
-  </biblioteca>
+    <usuario cuasi="rootRioja" pwd="root"/><usuario cuasi="bibliotecariaR1" pwd="b1"/><usuario cuasi="bibliotecariaR2" pwd="b2"/>
+  	<usuario cuasi="mimorep" pwd="mp"/><usuario cuasi="dirudiez" pwd="dz"/><usuario cuasi="jaclavij" pwd="jj"/><usuario cuasi="seleiva" pwd="sa"/><usuario cuasi="nuevo" pwd="no"/></biblioteca>
   <biblioteca>
   	<nombre>Universidad de Salamanca</nombre>
   	<localizacion>Salamanca</localizacion>
-  	<usuario cuasi="rootSalamanca" pwd="root" /><usuario cuasi="bibliotecariaS1" pwd="b1" />
-  	<usuario cuasi="jdivason" pwd="jn" />
-  	<usuario cuasi="dagonzr" pwd="dn" />
+  	<usuario cuasi="rootSalamanca" pwd="root"/><usuario cuasi="bibliotecariaS1" pwd="b1"/>
+  	<usuario cuasi="jdivason" pwd="jn"/>
+  	<usuario cuasi="dagonzr" pwd="dn"/>
   </biblioteca>
 </baseDatosBibliotecas>
