@@ -1,6 +1,8 @@
 package bd;
 
-public class Usuario {
+import java.io.Serializable;
+
+public class Usuario implements Serializable{
 	
 	private String cuasi;
 	private String pwd;
@@ -26,16 +28,8 @@ public class Usuario {
 		return cuasi;
 	}
 
-	public void setCuasi(String cuasi) {
-		this.cuasi = cuasi;
-	}
-
 	public String getPwd() {
 		return pwd;
-	}
-
-	public void setPwd(String pwd) {
-		this.pwd = pwd;
 	}
 	public String toString() {
 		String r = null;

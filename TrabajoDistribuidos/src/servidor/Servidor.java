@@ -1,10 +1,11 @@
 package servidor;
 
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,18 +17,29 @@ public class Servidor {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Sistema s = new Sistema();
-		Map<Integer, Usuario> sitiosUR = new HashMap<Integer, Usuario>(); //La Rioja
-		Map<Integer, Usuario> sitiosS = new HashMap<Integer, Usuario>();	//Salamanca
+		Sitios sitiosUR = new Sitios(); //La Rioja
+		Sitios sitiosSA = new Sitios();	//Salamanca
 		
-		//construimso los mapas con todos los sitios de la bibloteca y con el usuario a null
-		Usuario u = null;
+		//construimso los mapas con todos los sitios de la bibloteca y con el usuario vacio para marcar que esta disponible
+		Usuario u = new Usuario("vacio", "", false, false);
 		for(int i=0;i<67;i++) {
-			sitiosUR.put(i, u);
+			sitiosUR.addUsuario(i, u);;
 		}
 		for(int j=0;j<170;j++) {
-			sitiosS.put(j, u);
+			sitiosSA.addUsuario(j, u);;
 		}
 		
+		try (FileOutputStream f = new FileOutputStream("SitiosUR.txt");
+				ObjectOutputStream oos = new ObjectOutputStream(f)){
+			oos.writeObject(sitiosUR);
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		
 		try(ServerSocket server = new ServerSocket(7777);){
 			
