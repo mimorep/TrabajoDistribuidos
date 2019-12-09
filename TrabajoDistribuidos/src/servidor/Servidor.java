@@ -52,16 +52,22 @@ public class Servidor {
 					if(s.autenticarse(universidad, usuario, pwd)) {
 						if(usuario.contains("root")) {
 							respuesta = "isroot";
+							//tenemos que mandar la respuesta justo despues por que si no el server se va ha quedar esperando a qeu el cliente mande algo, pero el cliente se va a quedar esperando a que el server le responda  --> interbloqueo
+							w.write(respuesta);
+							w.flush();
+							String recivo = bf.readLine();
+							System.out.println(recivo);
 						}else if(usuario.contains("bibliotecari")) {
 							respuesta = "isbiblio";
+							w.write(respuesta);
 						}else {
 							respuesta = "isnormal";
+							w.write(respuesta);
 						}
 					}else {
 						respuesta = "notvalidated";
+						w.write(respuesta);
 					}
-				
-					w.write(respuesta);
 				}
 			}
 			

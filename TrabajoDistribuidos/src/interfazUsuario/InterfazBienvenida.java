@@ -140,7 +140,7 @@ public class InterfazBienvenida extends JFrame {
 			if(s.equals("isroot")) {
 				System.out.println("Es un root");
 				InterfazRoot ir = new InterfazRoot(this.universidad, cliente);
-				ir.run(this.universidad);
+				ir.run(this.universidad, cliente);
 				this.setVisible(false);
 			}else if(s.equals("isbiblio")){
 				System.out.println("es un bilio");

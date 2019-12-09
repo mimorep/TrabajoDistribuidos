@@ -149,11 +149,11 @@ public class InterfazRoot extends JFrame {
 		});
 	}
 	
-	public void run(int n) {
+	public void run(int n, Socket c) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazRoot frame = new InterfazRoot(n, cliente);
+					InterfazRoot frame = new InterfazRoot(n, c);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -202,12 +202,11 @@ public class InterfazRoot extends JFrame {
 		try(DataOutputStream outSocket = new DataOutputStream(this.cliente.getOutputStream())){
 			if(content.contains("Eliminar")) {
 				//caso de eliminar
-				
+				envio = "eliminar:" + this.tFNombre.getText() + "\r\n";
 			}else if(content.contains("adir")) {
 				//caso de añadir
 				envio = "aniadir:" + this.permisos + ":" + this.tFNombre.getText() + ":" + this.tFConstrasenia.getText() + "\r\n"; //creamos la cadena que se va a enviar
 			}
-			
 			outSocket.writeBytes(envio);
 			outSocket.flush();
 		} catch (IOException e) {
