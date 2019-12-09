@@ -30,13 +30,14 @@ public class InterfazBienvenida extends JFrame {
 	private JLabel lblNewLabel;
 	private JLabel lbError;
 	
-
+	private int universidad;
 
 	/**
 	 * Create the frame.
 	 */
 	public InterfazBienvenida(int imagen) {
 		
+		universidad = imagen;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazBienvenida.class.getResource("/imagenes/libro.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,13 +126,22 @@ public class InterfazBienvenida extends JFrame {
 				DataOutputStream outSocket = new DataOutputStream(cliente.getOutputStream());
 				DataInputStream inSocket = new DataInputStream(cliente.getInputStream())){
 			
-			String send = this.getUsuario() + " " + this.getPwd() + "\r\n"; //lo mandamos separado con un espacio para que el servidor lo splitee
+			String send = "";
+			if(this.universidad == 0) {
+				send = "Universidad de la Rioja:" + this.getUsuario() + ":" + this.getPwd() + "\r\n"; //lo mandamos separado con un espacio para que el servidor lo splitee
+			}else if(this.universidad == 1) {
+				send = "Universidad de Salamanca:" + this.getUsuario() + ":" + this.getPwd() + "\r\n"; //lo mandamos separado con un espacio para que el servidor lo splitee
+			}
 			outSocket.writeBytes(send);
 			outSocket.flush();
 			//hay que continuar por que este recivira una respuesta del server y con ella lanzara una interfaz u otra
 			String s = inSocket.readLine();//leemos lo que nos manda el server
+			
 			if(s.equals("isroot")) {
 				System.out.println("Es un root");
+				InterfazRoot ir = new InterfazRoot(this.universidad, cliente);
+				ir.run(this.universidad);
+				this.setVisible(false);
 			}else if(s.equals("isbiblio")){
 				System.out.println("es un bilio");
 			}else if(s.equals("notvalidated")){

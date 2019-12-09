@@ -38,16 +38,18 @@ public class Servidor {
 					BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
 						Writer w = new OutputStreamWriter(cliente.getOutputStream())){
 					
-					String linea, usuario = "", pwd = "", respuesta;
+					String linea, usuario = "", pwd = "", universidad = "",respuesta;
 					if((linea = bf.readLine()) != null) {
-						String[] usuarioPWD = linea.split(" ");
-						usuario = usuarioPWD[0];
-						pwd = usuarioPWD[1];
+						String[] usuarioPWD = linea.split(":");
+						universidad = usuarioPWD[0];
+						usuario = usuarioPWD[1];
+						pwd = usuarioPWD[2];
 					}
+					System.out.println("Universidad: " + universidad);
 					System.out.println("Usuario: " + usuario);
 					System.out.println("Contrasenia: " + pwd);
 					
-					if(s.autenticarse("Universidad de la Rioja", usuario, pwd)) {
+					if(s.autenticarse(universidad, usuario, pwd)) {
 						if(usuario.contains("root")) {
 							respuesta = "isroot";
 						}else if(usuario.contains("bibliotecari")) {

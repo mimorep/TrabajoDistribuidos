@@ -20,7 +20,6 @@ public class InterfazInicio extends JFrame {
 	private JButton bEntrar;
 	private JComboBox<String> cBUniversidades;
 	
-	private int imagen = 9999; 
 
 	/**
 	 * Create the frame.
@@ -68,10 +67,6 @@ public class InterfazInicio extends JFrame {
 				}
 			}
 		});
-		int n = this.getImagen();
-		while(n==9999) {
-			n = this.getImagen();
-		}
 	}
 	public void lanzarInterfaz() {
 		int n = 0;
@@ -87,11 +82,4 @@ public class InterfazInicio extends JFrame {
 		}
 		this.setVisible(false);
 	}
-	public Integer getImagen() {
-		return this.imagen;
-	}
-	public void setImagen(int n) {
-		this.imagen = n;
-	}
-	
 }
