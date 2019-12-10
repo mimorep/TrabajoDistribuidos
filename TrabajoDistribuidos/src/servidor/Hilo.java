@@ -44,9 +44,8 @@ public class Hilo implements Runnable{
 					w.write(respuesta);
 					w.flush();
 					bf.close();
-					w.close();
-					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s);
-					hr.run();
+//					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s);
+//					hr.run();
 					//creariamos el hilo secundario
 					
 				}else if(usuario.contains("bibliotecari")) {

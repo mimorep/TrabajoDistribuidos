@@ -20,7 +20,7 @@ public class Servidor {
 		Sitios sitiosUR = new Sitios(); //La Rioja
 		Sitios sitiosSA = new Sitios();	//Salamanca
 		
-		//construimso los mapas con todos los sitios de la bibloteca y con el usuario vacio para marcar que esta disponible
+		//construimso los mapas con todos los sitios de la bibloteca y con el usuario vacio para marcar que esta el sitio disponible
 		Usuario u = new Usuario("vacio", "", false, false);
 		for(int i=0;i<67;i++) {
 			sitiosUR.addUsuario(i, u);;
