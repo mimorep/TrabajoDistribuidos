@@ -117,7 +117,7 @@ public class Sistema {
 		DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
+			Document doc = db.parse(new File("TrabajoDistribuidos/src/xml/BDUsuarios.xml"));
 			Element alumnoNuevo = doc.createElement("usuario");
 			
 			alumnoNuevo.setAttribute("cuasi", nombre);
@@ -148,7 +148,7 @@ public class Sistema {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("src/xml/BDUsuarios.xml"));
+			StreamResult result = new StreamResult(new File("TrabajoDistribuidos/src/xml/BDUsuarios.xml"));
 			transformer.transform(source, result);
 			
 			this.generarBD(); //volvemos a generar la BD para que este actualizada a la hora de usarla
@@ -177,7 +177,7 @@ public class Sistema {
 		DocumentBuilder db;
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
+			Document doc = db.parse(new File("TrabajoDistribuidos/src/xml/BDUsuarios.xml"));
 			//creamos un atributo como el que queremos eliminar
 			Element alumnoElimninar = null;
 			Element biblio = null;
@@ -215,7 +215,7 @@ public class Sistema {
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
 			Transformer transformer = transformerFactory.newTransformer();
 			DOMSource source = new DOMSource(doc);
-			StreamResult result = new StreamResult(new File("src/xml/BDUsuarios.xml"));
+			StreamResult result = new StreamResult(new File("TrabajoDistribuidos/src/xml/BDUsuarios.xml"));
 			transformer.transform(source, result);
 			
 			this.generarBD(); //volvemos a generar la BD para que este actualizada a la hora de usarla

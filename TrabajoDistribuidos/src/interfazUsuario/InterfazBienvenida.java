@@ -122,9 +122,14 @@ public class InterfazBienvenida extends JFrame {
 	}
 	//metodo que se va a encargar de mandar tanto el usuario como la contrasenia al servidor
 	public void mandarDatosAlServer() {
-		try(Socket cliente = new Socket("localhost", 7777);
-				DataOutputStream outSocket = new DataOutputStream(cliente.getOutputStream());
-				DataInputStream inSocket = new DataInputStream(cliente.getInputStream())){
+		Socket cliente = null;
+		DataOutputStream outSocket;
+		DataInputStream inSocket;
+		try {
+			//no podemos hacer un try with resources para evitar que se nos cierre el Socket cuando se llaman a las demas interfaces
+			cliente = new Socket("localhost", 7777);
+			outSocket = new DataOutputStream(cliente.getOutputStream());
+			inSocket = new DataInputStream(cliente.getInputStream());
 			
 			String send = "";
 			if(this.universidad == 0) {
@@ -163,6 +168,6 @@ public class InterfazBienvenida extends JFrame {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}//no hay que cerrar el Socket se encargara de ello la siguiente interfaz
 	}
 }

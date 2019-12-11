@@ -33,7 +33,7 @@ public class InterfazRoot extends JFrame {
 	private JButton Vacio;
 	
 	private int imagen;
-	private String permisos;
+	private String permisos = ""; //ponemos cadena vacia por que si no nos escribira null delante del nombre
 	private Socket cliente;
 	
 
@@ -200,15 +200,21 @@ public class InterfazRoot extends JFrame {
 		//aqui usaremos el Socket que se nos pasa como parametro, no necesitamos crearlo de nuevo por que cuando se nos pasa ya esta creado y lo pasamos como parametro para que sea mas eficiente
 		String content = this.Vacio.getText();
 		String envio = "";
-		try(DataOutputStream outSocket = new DataOutputStream(this.cliente.getOutputStream()); //marca que se cierra el socket
-				DataInputStream inSocket = new DataInputStream(this.cliente.getInputStream())){
+		
+		DataOutputStream outSocket;
+		DataInputStream inSocket;
+		//no queremos que sea este el encargado de cerrar los Socket asi que no pondremos sentencia finally ya que se encargaran de cerrarlo los metodos a los que llama
+		try{
+			outSocket = new DataOutputStream(this.cliente.getOutputStream());
+			inSocket = new DataInputStream(this.cliente.getInputStream());
+			
 			String biblio = (this.imagen == 0)? "Universidad de la Rioja":"Universidad de Salamanca";
 			if(content.contains("Eliminar")) {
 				//caso de eliminar
-				envio = "eliminar:" + this.tFNombre.getText() +this.tFConstrasenia.getText()+ biblio+ "\r\n";
+				envio = "eliminar:" + this.tFNombre.getText() +":"+this.tFConstrasenia.getText()+":"+ biblio+ "\r\n";
 			}else if(content.contains("adir")) {
 				//caso de añadir
-				envio = "aniadir:" + this.permisos + ":" + this.tFNombre.getText() + ":" + this.tFConstrasenia.getText() +biblio + "\r\n"; //creamos la cadena que se va a enviar
+				envio = "aniadir:" + this.permisos + ":" + this.tFNombre.getText() + ":" + this.tFConstrasenia.getText()+ ":" +biblio + "\r\n"; //creamos la cadena que se va a enviar
 			}
 			outSocket.writeBytes(envio);
 			outSocket.flush();

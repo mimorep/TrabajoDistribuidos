@@ -23,8 +23,13 @@ public class Hilo implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 
-		try(BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-				Writer w = new OutputStreamWriter(cliente.getOutputStream())){ //usar printWiter para evitar añaidr el salto
+		BufferedReader bf;
+		Writer w;
+				
+		try{ //usar printWiter para evitar añaidr el salto
+			
+			bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
+			w = new OutputStreamWriter(cliente.getOutputStream());
 			
 			String linea, usuario = "", pwd = "", universidad = "",respuesta;
 			if((linea = bf.readLine()) != null) {
