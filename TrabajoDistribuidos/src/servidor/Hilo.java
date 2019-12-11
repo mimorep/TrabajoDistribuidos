@@ -43,8 +43,8 @@ public class Hilo implements Runnable{
 					//tenemos que mandar la respuesta justo despues por que si no el server se va ha quedar esperando a qeu el cliente mande algo, pero el cliente se va a quedar esperando a que el server le responda  --> interbloqueo
 					w.write(respuesta); //añadir el salto de linea
 					w.flush();
-//					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s);
-//					hr.run();
+					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s); //llamamos al hilo secuandario para que realize el eliminar/aniadir
+					hr.run();
 					//creariamos el hilo secundario
 					
 				}else if(usuario.contains("bibliotecari")) {

@@ -37,14 +37,19 @@ public class HiloSecundarioRoot implements Runnable {
 					if(!s.autenticarse(biblio, nombre, pwd)) {
 						//si no esta lo aniadirmos
 						s.aniadir(biblio, permisos+nombre, pwd);
-						w.write("Aniadio");
+						w.write("Aniadio \r\n");
 					}else {
-						w.write("no aniadido");
+						w.write("no aniadido \r\n");
 					}
 				}else { //si no es por que estamos en el eliminar
 					orden = mandato[0];
 					nombre = mandato[1];
-					biblio = mandato[2];
+					pwd = mandato[2];
+					biblio = mandato[3];
+					if(s.autenticarse(biblio, nombre, pwd)) { //comprobamos primero si esta para eliminarlo
+						s.eliminar(biblio, nombre);
+						w.write("eliminado \r\n");
+					}
 				}
 				
 			}
