@@ -132,7 +132,7 @@ public class InterfazBibliotecario extends JFrame {
 			s = (Sitios) ois.readObject(); //cojemos la lista de sitios
 			//manipulamos la lista de sitios como queramos
 			for(int i=0;i<s.size();i++) {
-				System.out.println(s.getUsuario(i).getCuasi()); //mostramos todos los usuarios
+				System.out.println("Sitio "+ i +":" + s.getUsuario(i).getCuasi()); //mostramos todos los usuarios
 			}
 			
 		} catch (FileNotFoundException e) {

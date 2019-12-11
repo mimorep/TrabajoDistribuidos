@@ -137,21 +137,21 @@ public class InterfazBienvenida extends JFrame {
 			//hay que continuar por que este recivira una respuesta del server y con ella lanzara una interfaz u otra
 			String s = inSocket.readLine();//leemos lo que nos manda el server
 			
-			if(s.equals("isroot")) {
+			if(s.contains("isroot")) {
 				
 				System.out.println("Es un root");
 				InterfazRoot ir = new InterfazRoot(this.universidad, cliente);
 				ir.run(this.universidad, cliente);
 				this.setVisible(false);
 				
-			}else if(s.equals("isbiblio")){
+			}else if(s.contains("isbiblio")){
 				
 				System.out.println("es un bilio");
 				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad);
 				ib.run(this.universidad);
 				this.setVisible(false);
 				
-			}else if(s.equals("notvalidated")){
+			}else if(s.contains("notvalidated")){
 				
 				//mostar label de que no estas en la BD
 				System.out.println("NO ESTAS EN EL SISTEMA");

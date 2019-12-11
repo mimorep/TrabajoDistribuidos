@@ -1,18 +1,22 @@
 package servidor;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import bd.Usuario;
 
 public class Sitios implements Serializable {
 	
 	static final long serialVersionUID = 7;
+	private String nombre;
 	
-	private Map<Integer, Usuario> sitios = new HashMap<Integer, Usuario>();
+	public Sitios(String nombre) {
+		this.nombre = nombre;
+	}
 	
-	public void addUsuario(int n, Usuario u) {
+	private ConcurrentHashMap<Integer, Usuario> sitios = new ConcurrentHashMap<Integer, Usuario>();
+	
+	public synchronized void addUsuario(int n, Usuario u) { //igual necesario hacer este metodo sincrono para que varios usuarios no puedan reservar el mismo sitio
 		this.sitios.put(n, u);
 	}
 	public Boolean estaOcupado(int i) {
@@ -29,5 +33,12 @@ public class Sitios implements Serializable {
 	public int size() {
 		return this.sitios.size();
 	}
+	public String getNombre() {
+		return nombre;
+	}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
 	
 }

@@ -24,7 +24,7 @@ public class Hilo implements Runnable{
 		// TODO Auto-generated method stub
 
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(cliente.getInputStream()));
-				Writer w = new OutputStreamWriter(cliente.getOutputStream())){
+				Writer w = new OutputStreamWriter(cliente.getOutputStream())){ //usar printWiter para evitar añaidr el salto
 			
 			String linea, usuario = "", pwd = "", universidad = "",respuesta;
 			if((linea = bf.readLine()) != null) {
@@ -39,28 +39,27 @@ public class Hilo implements Runnable{
 			
 			if(s.autenticarse(universidad, usuario, pwd)) {
 				if(usuario.contains("root")) {
-					respuesta = "isroot";
+					respuesta = "isroot \r\n";
 					//tenemos que mandar la respuesta justo despues por que si no el server se va ha quedar esperando a qeu el cliente mande algo, pero el cliente se va a quedar esperando a que el server le responda  --> interbloqueo
-					w.write(respuesta);
+					w.write(respuesta); //añadir el salto de linea
 					w.flush();
-					bf.close();
 //					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s);
 //					hr.run();
 					//creariamos el hilo secundario
 					
 				}else if(usuario.contains("bibliotecari")) {
-					respuesta = "isbiblio";
+					respuesta = "isbiblio \r\n";
 					w.write(respuesta);
 					w.flush();
 					//creariamos el hilo secundario
 				}else {
-					respuesta = "isnormal";
+					respuesta = "isnormal \r\n";
 					w.write(respuesta);
 					w.flush();
 					//creariamos el hilo secundario
 				}
 			}else {
-				respuesta = "notvalidated";
+				respuesta = "notvalidated \r\n";
 				w.write(respuesta);
 				w.flush();
 			}

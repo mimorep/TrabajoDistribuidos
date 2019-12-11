@@ -42,7 +42,7 @@ public class Sistema {
 		
 		try {
 			db = dbf.newDocumentBuilder();
-			Document doc = db.parse(new File("src/xml/BDUsuarios.xml"));
+			Document doc = db.parse(new File("TrabajoDistribuidos\\src\\xml\\BDUsuarios.xml"));
 			
 			this.listaBibliotecas = new ArrayList<Biblioteca>();
 			Element raiz = doc.getDocumentElement(); //obtenemos el nodo raiz

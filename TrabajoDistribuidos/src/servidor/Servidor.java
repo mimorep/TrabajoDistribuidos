@@ -9,6 +9,8 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import com.sun.xml.internal.ws.api.ha.StickyFeature;
+
 import bd.Usuario;
 import sistema.Sistema;
 
@@ -17,8 +19,8 @@ public class Servidor {
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
 		Sistema s = new Sistema();
-		Sitios sitiosUR = new Sitios(); //La Rioja
-		Sitios sitiosSA = new Sitios();	//Salamanca
+		Sitios sitiosUR = new Sitios("sitiosUR"); //La Rioja usar symcrono
+		Sitios sitiosSA = new Sitios("sitiosSA");	//Salamanca
 		
 		//construimso los mapas con todos los sitios de la bibloteca y con el usuario vacio para marcar que esta el sitio disponible
 		Usuario u = new Usuario("vacio", "", false, false);
@@ -29,17 +31,8 @@ public class Servidor {
 			sitiosSA.addUsuario(j, u);;
 		}
 		
-		try (FileOutputStream f = new FileOutputStream("SitiosUR.txt");
-				ObjectOutputStream oos = new ObjectOutputStream(f)){
-			oos.writeObject(sitiosUR);
-			
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		serializarSitios(sitiosUR);
+		serializarSitios(sitiosSA);
 		
 		try(ServerSocket server = new ServerSocket(7777);){
 			
@@ -55,11 +48,22 @@ public class Servidor {
 			e.printStackTrace();
 		}
 		
+	}
+	//metodo al que llamaremos cada vez que queramos serializar un objeto del tipo Sitios
+	public static void serializarSitios(Sitios s) {
+		String nombreArchivo = (s.getNombre().equals("sitiosUR"))? "SitiosUR.txt":"SitiosSA.txt";
 		
-		
-		//el servidor se va a quedar esperando y se va a encargar de mostrarle la interfaz a cada uno de los clientes que le vayan pidiendo actuar.
-		
-		//aqui se desarrollara el servidor
+		try (FileOutputStream f = new FileOutputStream(nombreArchivo);
+				ObjectOutputStream oos = new ObjectOutputStream(f)){
+			oos.writeObject(s);
+			
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 }
