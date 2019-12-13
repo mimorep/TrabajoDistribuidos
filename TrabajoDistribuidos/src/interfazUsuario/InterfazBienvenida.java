@@ -164,6 +164,9 @@ public class InterfazBienvenida extends JFrame {
 				
 			}else {
 				System.out.println("es normal");
+				InterfazUsuarioNormal iu  = new InterfazUsuarioNormal(this.universidad, cliente);
+				iu.run(this.universidad, cliente);
+				this.setVisible(false);
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

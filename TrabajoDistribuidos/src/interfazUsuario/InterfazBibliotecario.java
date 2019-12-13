@@ -39,6 +39,7 @@ public class InterfazBibliotecario extends JFrame {
 	private JTextArea textArea;
 	
 	private Socket cliente;
+	private JButton btSitios;
 
 	/**
 	 * Create the frame.
@@ -55,7 +56,7 @@ public class InterfazBibliotecario extends JFrame {
 		setContentPane(contentPane);
 		contentPane.setLayout(null);
 		
-		JButton btSitios = new JButton("Ver sitios");
+		btSitios = new JButton("Ver sitios");
 		btSitios.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btSitios.setBounds(272, 188, 176, 23);
 		contentPane.add(btSitios);
@@ -142,6 +143,8 @@ public class InterfazBibliotecario extends JFrame {
 		this.tFPosicion.setVisible(true);
 	}
 	public void obtenerSitios() {
+		
+		this.btSitios.setText("Actualizar lista de sitios");
 		//añadir una comunicacion con el servidor para que cada vez que se pulse el servidor serialize el objeto
 		
 		String envio = "";

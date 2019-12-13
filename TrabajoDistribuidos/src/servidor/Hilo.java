@@ -68,6 +68,8 @@ public class Hilo implements Runnable{
 					respuesta = "isnormal \r\n";
 					w.write(respuesta);
 					w.flush();
+					HiloSecundarioUsuarioNormal hn = new HiloSecundarioUsuarioNormal(cliente, s, sUR, sSA);
+					hn.run();
 					//creariamos el hilo secundario
 				}
 			}else {
