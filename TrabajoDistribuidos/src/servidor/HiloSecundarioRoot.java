@@ -22,6 +22,7 @@ public class HiloSecundarioRoot implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));
 				Writer w = new OutputStreamWriter(this.cliente.getOutputStream())){
 			
@@ -38,8 +39,10 @@ public class HiloSecundarioRoot implements Runnable {
 						//si no esta lo aniadirmos
 						s.aniadir(biblio, permisos+nombre, pwd);
 						w.write("Aniadio \r\n");
+						w.flush();
 					}else {
 						w.write("no aniadido \r\n");
+						w.flush();
 					}
 				}else { //si no es por que estamos en el eliminar
 					orden = mandato[0];
@@ -49,6 +52,7 @@ public class HiloSecundarioRoot implements Runnable {
 					if(s.autenticarse(biblio, nombre, pwd)) { //comprobamos primero si esta para eliminarlo
 						s.eliminar(biblio, nombre);
 						w.write("eliminado \r\n");
+						w.flush();
 					}
 				}
 				

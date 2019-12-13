@@ -5,10 +5,14 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.io.OutputStream;
 import java.net.Socket;
 
 import javax.swing.ImageIcon;
@@ -16,6 +20,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 
@@ -30,12 +36,16 @@ public class InterfazBibliotecario extends JFrame {
 	private int imagen;
 	private JLabel lblNSitio;
 	private JButton btnLiberar;
+	private JTextArea textArea;
+	
+	private Socket cliente;
 
 	/**
 	 * Create the frame.
 	 */
-	public InterfazBibliotecario(int imagen) {
+	public InterfazBibliotecario(int imagen, Socket cliente) {
 		this.imagen = imagen;
+		this.cliente = cliente;		
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazBibliotecario.class.getResource("/imagenes/libro.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -55,7 +65,7 @@ public class InterfazBibliotecario extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
-				Sitios s = obtenerSitios();
+				obtenerSitios();
 			}
 		});
 		
@@ -100,12 +110,25 @@ public class InterfazBibliotecario extends JFrame {
 			logo.setBounds(270, 11, 260, 170);
 		}
 		contentPane.add(logo);
+		
+		
+		textArea = new JTextArea();
+		textArea.setBounds(518, 189, 200, 263);
+		textArea.setEditable(false);
+		contentPane.add(textArea);
+		
+		JScrollPane sb = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		sb.setBounds(518, 189, 200, 263);
+		contentPane.add(sb);
+		
+		
+		
 	}
-	public void run(int n) {
+	public void run(int n, Socket c) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazBibliotecario frame = new InterfazBibliotecario(n);
+					InterfazBibliotecario frame = new InterfazBibliotecario(n, c);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -118,22 +141,56 @@ public class InterfazBibliotecario extends JFrame {
 		this.btnLiberar.setVisible(true);
 		this.tFPosicion.setVisible(true);
 	}
-	public Sitios obtenerSitios() {
+	public void obtenerSitios() {
+		//añadir una comunicacion con el servidor para que cada vez que se pulse el servidor serialize el objeto
+		
+		String envio = "";
 		Sitios s = null;
+		
+		DataOutputStream outSocket = null;
+		InputStream inSocket = null;
+		OutputStream outFichero = null;
 		String ruta = "";
-		if(imagen == 0) {
-			ruta = "SitiosUR.txt";
-		}else if(imagen == 1) {
-			ruta = "SitiosSA.txt";
+		
+		try {
+			outSocket = new DataOutputStream(this.cliente.getOutputStream());
+			inSocket = this.cliente.getInputStream();
+			
+			if(imagen == 0) {
+				ruta = "TrabajoDistribuidos\\src\\interfazUsuario\\SitiosUR.txt"; //ruta donde el cliente guardara el objeto serializado
+			}else if(imagen == 1) {
+				ruta = "TrabajoDistribuidos\\src\\interfazUsuario\\SitiosSA.txt"; //ruta donde el cliente guardara el objeto serializado
+			}
+			
+			outFichero = new FileOutputStream(ruta); //ruta donde el cliente guardara el objeto serializado
+			
+			envio = "serializar:" + this.imagen + ":" + "\r\n";
+			outSocket.writeBytes(envio);
+			outSocket.flush();
+			
+			//ahora tenemos que leer el objeto serializado
+			byte buff[] = new byte[1024*32];
+			int leidos = inSocket.read(buff);
+			while(leidos != -1) {
+				outFichero.write(buff, 0, leidos);
+				leidos = inSocket.read(buff);
+			}
+		}catch(IOException e) {
+			e.printStackTrace();
 		}
+		
 		try(FileInputStream f = new FileInputStream(ruta);
 				ObjectInputStream ois = new ObjectInputStream(f)){
 			
 			s = (Sitios) ois.readObject(); //cojemos la lista de sitios
 			//manipulamos la lista de sitios como queramos
+			String fin = "";
 			for(int i=0;i<s.size();i++) {
-				System.out.println("Sitio "+ i +":" + s.getUsuario(i).getCuasi()); //mostramos todos los usuarios
+				String texto = "Sitio "+ i +": " + s.getUsuario(i).getCuasi() + "\r\n";
+				System.out.println(texto); //mostramos todos los usuarios
+				fin = fin + texto;
 			}
+			this.textArea.setText(fin);
 			
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -146,7 +203,35 @@ public class InterfazBibliotecario extends JFrame {
 			e.printStackTrace();
 		}
 		
-		return s;
+//		Sitios s = null;
+//		String ruta = "";
+//		if(imagen == 0) {
+//			ruta = "SitiosUR.txt";
+//		}else if(imagen == 1) {
+//			ruta = "SitiosSA.txt";
+//		}
+//		try(FileInputStream f = new FileInputStream(ruta);
+//				ObjectInputStream ois = new ObjectInputStream(f)){
+//			
+//			s = (Sitios) ois.readObject(); //cojemos la lista de sitios
+//			//manipulamos la lista de sitios como queramos
+//			String fin = "";
+//			for(int i=0;i<s.size();i++) {
+//				String texto = "Sitio "+ i +": " + s.getUsuario(i).getCuasi() + "\r\n";
+//				System.out.println(texto); //mostramos todos los usuarios
+//				fin = fin + texto;
+//			}
+//			this.textArea.setText(fin);
+//			
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		} catch (ClassNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
-
 }

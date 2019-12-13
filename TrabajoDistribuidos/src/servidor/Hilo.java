@@ -12,11 +12,14 @@ import sistema.Sistema;
 public class Hilo implements Runnable{
 	
 	private Socket cliente;
+	private Sitios sUR, sSA;
 	private Sistema s;
 	
-	public Hilo(Socket cliente, Sistema s) {
+	public Hilo(Socket cliente, Sistema s, Sitios sUR, Sitios sSA) {
 		this.cliente = cliente;
 		this.s = s;
+		this.sUR = sUR;
+		this.sSA = sSA;
 	}
 	
 	@Override
@@ -33,6 +36,7 @@ public class Hilo implements Runnable{
 			
 			String linea, usuario = "", pwd = "", universidad = "",respuesta;
 			if((linea = bf.readLine()) != null) {
+				//cuando entramos aqui tenemos ya la linea
 				String[] usuarioPWD = linea.split(":");
 				universidad = usuarioPWD[0];
 				usuario = usuarioPWD[1];
@@ -48,6 +52,7 @@ public class Hilo implements Runnable{
 					//tenemos que mandar la respuesta justo despues por que si no el server se va ha quedar esperando a qeu el cliente mande algo, pero el cliente se va a quedar esperando a que el server le responda  --> interbloqueo
 					w.write(respuesta); //añadir el salto de linea
 					w.flush();
+					//posible problema a no poder hacer varias acciones a la vez, aqui es donde se esta cerrando el socket
 					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s); //llamamos al hilo secuandario para que realize el eliminar/aniadir
 					hr.run();
 					//creariamos el hilo secundario
@@ -56,6 +61,8 @@ public class Hilo implements Runnable{
 					respuesta = "isbiblio \r\n";
 					w.write(respuesta);
 					w.flush();
+					HiloSecundarioBibliotecario hb = new HiloSecundarioBibliotecario(cliente, s, sUR, sSA);
+					hb.run();
 					//creariamos el hilo secundario
 				}else {
 					respuesta = "isnormal \r\n";

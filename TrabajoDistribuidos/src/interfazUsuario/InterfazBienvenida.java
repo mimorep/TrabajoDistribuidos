@@ -152,8 +152,8 @@ public class InterfazBienvenida extends JFrame {
 			}else if(s.contains("isbiblio")){
 				
 				System.out.println("es un bilio");
-				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad);
-				ib.run(this.universidad);
+				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad, cliente);
+				ib.run(this.universidad, cliente);
 				this.setVisible(false);
 				
 			}else if(s.contains("notvalidated")){

@@ -31,15 +31,15 @@ public class Servidor {
 			sitiosSA.addUsuario(j, u);;
 		}
 		
-		serializarSitios(sitiosUR);
-		serializarSitios(sitiosSA);
+//		serializarSitios(sitiosUR);
+//		serializarSitios(sitiosSA);
 		
 		try(ServerSocket server = new ServerSocket(7777);){
 			
 			ExecutorService pool = Executors.newCachedThreadPool(); //crea tantos hilo como se necesita
 			while(true) { //aqui es donde se estan atendiendo las peticiones, es decir donde estara el pool de hilos
 				Socket cliente = server.accept();
-				pool.execute(new Hilo(cliente, s));
+				pool.execute(new Hilo(cliente, s, sitiosUR, sitiosSA));
 			}
 			//pool.shutdown();
 			
@@ -50,20 +50,20 @@ public class Servidor {
 		
 	}
 	//metodo al que llamaremos cada vez que queramos serializar un objeto del tipo Sitios
-	public static void serializarSitios(Sitios s) {
-		String nombreArchivo = (s.getNombre().equals("sitiosUR"))? "SitiosUR.txt":"SitiosSA.txt";
-		
-		try (FileOutputStream f = new FileOutputStream(nombreArchivo);
-				ObjectOutputStream oos = new ObjectOutputStream(f)){
-			oos.writeObject(s);
-			
-		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		} catch (IOException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-	}
+//	public static void serializarSitios(Sitios s) {
+//		String nombreArchivo = (s.getNombre().equals("sitiosUR"))? "SitiosUR.txt":"SitiosSA.txt";
+//		
+//		try (FileOutputStream f = new FileOutputStream(nombreArchivo);
+//				ObjectOutputStream oos = new ObjectOutputStream(f)){
+//			oos.writeObject(s);
+//			
+//		} catch (FileNotFoundException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		} catch (IOException e1) {
+//			// TODO Auto-generated catch block
+//			e1.printStackTrace();
+//		}
+//	}
 
 }

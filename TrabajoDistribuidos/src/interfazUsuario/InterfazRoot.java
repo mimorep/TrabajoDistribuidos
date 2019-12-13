@@ -9,6 +9,8 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -33,6 +35,7 @@ public class InterfazRoot extends JFrame {
 	private JButton Vacio;
 	
 	private int imagen;
+	private Boolean salir = false;
 	private String permisos = ""; //ponemos cadena vacia por que si no nos escribira null delante del nombre
 	private Socket cliente;
 	
@@ -201,8 +204,9 @@ public class InterfazRoot extends JFrame {
 		String content = this.Vacio.getText();
 		String envio = "";
 		
-		DataOutputStream outSocket;
-		DataInputStream inSocket;
+		DataOutputStream outSocket = null;
+		DataInputStream inSocket = null;
+		
 		//no queremos que sea este el encargado de cerrar los Socket asi que no pondremos sentencia finally ya que se encargaran de cerrarlo los metodos a los que llama
 		try{
 			outSocket = new DataOutputStream(this.cliente.getOutputStream());
@@ -224,5 +228,6 @@ public class InterfazRoot extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		//no añadimos sentencia finally por que no queremos que se nos cierre el Socket ya que puede querer realizar mas de una accion
 	}
 }
