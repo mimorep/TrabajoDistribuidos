@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import sistema.Sistema;
 
@@ -36,6 +38,7 @@ public class Hilo implements Runnable{
 			
 			String linea, usuario = "", pwd = "", universidad = "",respuesta;
 			if((linea = bf.readLine()) != null) {
+				
 				//cuando entramos aqui tenemos ya la linea
 				String[] usuarioPWD = linea.split(":");
 				universidad = usuarioPWD[0];

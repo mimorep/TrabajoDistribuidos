@@ -31,7 +31,12 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		try (BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));){
+		BufferedReader bf = null;
+		try {
+			
+			 bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));
+			
+			
 			String leido;
 			if((leido = bf.readLine()) != null) {
 				String[] mandato = leido.split(":");
@@ -56,10 +61,12 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 					}else if(mandato[1].equals("1")){
 						//es por que estamos en la US
 						serializarSitios(sSA);
+						
 						//ahora tenemos que mandarlos
 						fichero = new File("TrabajoDistribuidos\\src\\servidor\\SitiosSA.txt");
 						try(InputStream inFich = new FileInputStream(fichero);
 								OutputStream outSocket = this.cliente.getOutputStream()){
+							
 							//leemos del fichero y lo vamos mandando
 							byte buff[] = new byte[1024*32];
 							int leidos = inFich.read(buff);

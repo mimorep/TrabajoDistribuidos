@@ -176,7 +176,7 @@ public class InterfazBibliotecario extends JFrame {
 			int leidos = inSocket.read(buff);
 			while(leidos != -1) {
 				outFichero.write(buff, 0, leidos);
-				leidos = inSocket.read(buff);
+				leidos = inSocket.read(buff); //se nos esta quedando aqui bloqueado
 			}
 		}catch(IOException e) {
 			e.printStackTrace();
