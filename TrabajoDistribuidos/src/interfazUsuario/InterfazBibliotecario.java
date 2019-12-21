@@ -38,15 +38,16 @@ public class InterfazBibliotecario extends JFrame {
 	private JButton btnLiberar;
 	private JTextArea textArea;
 	
-	private Socket cliente;
+	private Socket cliente, clienteObjetos;
 	private JButton btSitios;
 
 	/**
 	 * Create the frame.
 	 */
-	public InterfazBibliotecario(int imagen, Socket cliente) {
+	public InterfazBibliotecario(int imagen, Socket cliente, Socket clienteObjetos) {
 		this.imagen = imagen;
 		this.cliente = cliente;		
+		this.clienteObjetos = clienteObjetos;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazBibliotecario.class.getResource("/imagenes/libro.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -125,11 +126,11 @@ public class InterfazBibliotecario extends JFrame {
 		
 		
 	}
-	public void run(int n, Socket c) {
+	public void run(int n, Socket c, Socket co) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazBibliotecario frame = new InterfazBibliotecario(n, c);
+					InterfazBibliotecario frame = new InterfazBibliotecario(n, c, co);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -143,6 +144,7 @@ public class InterfazBibliotecario extends JFrame {
 		this.tFPosicion.setVisible(true);
 	}
 	public void obtenerSitios() {
+		//para este metodo tenemos que usar otro socket, que sera usado para el envio del objeto serializado
 		
 		this.btSitios.setText("Actualizar lista de sitios");
 		//añadir una comunicacion con el servidor para que cada vez que se pulse el servidor serialize el objeto
@@ -156,8 +158,11 @@ public class InterfazBibliotecario extends JFrame {
 		String ruta = "";
 		
 		try {
+			//hacemos esto para que cada vez que se pulse el socket se regenere
+			this.clienteObjetos = new Socket("localhost", 7777);
 			outSocket = new DataOutputStream(this.cliente.getOutputStream());
-			inSocket = this.cliente.getInputStream();
+			//de esta forma tenemos separandas la in de la out
+			inSocket = this.clienteObjetos.getInputStream();
 			
 			if(imagen == 0) {
 				ruta = "TrabajoDistribuidos\\src\\interfazUsuario\\SitiosUR.txt"; //ruta donde el cliente guardara el objeto serializado

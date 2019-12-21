@@ -48,8 +48,10 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 						serializarSitios(sUR);
 						//ahora temos que mandarlos
 						fichero = new File("TrabajoDistribuidos\\src\\servidor\\SitiosUR.txt"); //creamos el obj para representar lo serializado
-						try(InputStream inFich = new FileInputStream(fichero);
-								OutputStream outSocket = this.cliente.getOutputStream()){
+						
+						//simpre el out antes que el in para evitar interbloqueos
+						try(OutputStream outSocket = this.cliente.getOutputStream();
+								InputStream inFich = new FileInputStream(fichero);){
 							//leemos del fichero y lo vamos mandando
 							byte buff[] = new byte[1024*32];
 							int leidos = inFich.read(buff);

@@ -17,12 +17,13 @@ import sistema.Sistema;
 public class HiloSecundarioBibliotecario implements Runnable {
 	
 	//este hilo va ha serializar la lista y la va a enviar
-	private Socket cliente;
+	private Socket cliente, clienteObjetos;
 	private Sitios sUR, sSA;
 	private Sistema s;
 	
-	public HiloSecundarioBibliotecario(Socket cliente, Sistema s, Sitios sUR, Sitios sSA) {
+	public HiloSecundarioBibliotecario(Socket cliente, Socket clienteObjetos,Sistema s, Sitios sUR, Sitios sSA) {
 		this.cliente = cliente;
+		this.clienteObjetos = clienteObjetos;
 		this.s = s;
 		this.sUR = sUR;
 		this.sSA = sSA;
@@ -31,6 +32,8 @@ public class HiloSecundarioBibliotecario implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		
+		//SIMPRE QUE ABRAMOS OUT/INPUTS TENEMOS QUE CREAR PRIMERO LOS OUT Y LUEGO LOS IN, si no estaremos causando un deadlock
 		try (BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));){
 			String leido;
 			//va todo en un bucle infinito para que se pueda realizar mas de una accion
@@ -48,8 +51,9 @@ public class HiloSecundarioBibliotecario implements Runnable {
 							InputStream inFich = null;
 							OutputStream outSocket = null;
 							try{
+								//siempre tenemos que declararlo en este orden, si no podriamos obtener un deadlock
+								outSocket = this.clienteObjetos.getOutputStream();
 								inFich = new FileInputStream(fichero);
-								outSocket = this.cliente.getOutputStream();
 								//leemos del fichero y lo vamos mandando
 								byte buff[] = new byte[1024*32];
 								int leidos = inFich.read(buff);

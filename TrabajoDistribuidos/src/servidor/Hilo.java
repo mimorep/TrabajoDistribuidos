@@ -5,20 +5,20 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import sistema.Sistema;
 
 public class Hilo implements Runnable{
 	
-	private Socket cliente;
+	private Socket cliente, clienteObjetos;
 	private Sitios sUR, sSA;
 	private Sistema s;
 	
-	public Hilo(Socket cliente, Sistema s, Sitios sUR, Sitios sSA) {
+	public Hilo(Socket cliente, Socket clienteObjetos,Sistema s, Sitios sUR, Sitios sSA) {
 		this.cliente = cliente;
+		this.clienteObjetos = clienteObjetos;
 		this.s = s;
 		this.sUR = sUR;
 		this.sSA = sSA;
@@ -64,7 +64,9 @@ public class Hilo implements Runnable{
 					respuesta = "isbiblio \r\n";
 					w.write(respuesta);
 					w.flush();
-					HiloSecundarioBibliotecario hb = new HiloSecundarioBibliotecario(cliente, s, sUR, sSA);
+					//tenemos que aceptar aqui el segundo socket, ya que solo en estos dos casos sera asignado
+					//ERRORES AQUI SE QUEDA A LA ESPERA TODO EL RATO
+					HiloSecundarioBibliotecario hb = new HiloSecundarioBibliotecario(cliente, clienteObjetos, s, sUR, sSA);
 					hb.run();
 					//creariamos el hilo secundario
 				}else {

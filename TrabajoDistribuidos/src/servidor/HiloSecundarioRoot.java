@@ -23,7 +23,7 @@ public class HiloSecundarioRoot implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		
-		
+		//SIMPRE QUE ABRAMOS OUT/INPUTS TENEMOS QUE CREAR PRIMERO LOS OUT Y LUEGO LOS IN, si no estaremos causando un deadlock
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));
 				Writer w =  new OutputStreamWriter(this.cliente.getOutputStream());){
 			String leido, orden, permisos, nombre, pwd, biblio;

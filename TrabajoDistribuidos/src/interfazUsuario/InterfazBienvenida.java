@@ -123,11 +123,13 @@ public class InterfazBienvenida extends JFrame {
 	//metodo que se va a encargar de mandar tanto el usuario como la contrasenia al servidor
 	public void mandarDatosAlServer() {
 		Socket cliente = null;
+		Socket clienteObjetos = null;
 		DataOutputStream outSocket;
 		DataInputStream inSocket;
 		try {
 			//no podemos hacer un try with resources para evitar que se nos cierre el Socket cuando se llaman a las demas interfaces
 			cliente = new Socket("localhost", 7777);
+			clienteObjetos = new Socket("localhost", 7777);
 			outSocket = new DataOutputStream(cliente.getOutputStream());
 			inSocket = new DataInputStream(cliente.getInputStream());
 			
@@ -152,8 +154,8 @@ public class InterfazBienvenida extends JFrame {
 			}else if(s.contains("isbiblio")){
 				
 				System.out.println("es un bilio");
-				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad, cliente);
-				ib.run(this.universidad, cliente);
+				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad, cliente, clienteObjetos);
+				ib.run(this.universidad, cliente, clienteObjetos);
 				this.setVisible(false);
 				
 			}else if(s.contains("notvalidated")){

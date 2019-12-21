@@ -39,7 +39,9 @@ public class Servidor {
 			ExecutorService pool = Executors.newCachedThreadPool(); //crea tantos hilo como se necesita
 			while(true) { //aqui es donde se estan atendiendo las peticiones, es decir donde estara el pool de hilos
 				Socket cliente = server.accept();
-				pool.execute(new Hilo(cliente, s, sitiosUR, sitiosSA));
+				Socket clienteObjetos = server.accept();
+				//Socket clienteObjetos = null; //solo usaremos este en caso de que se vaya a serializar un objeto
+				pool.execute(new Hilo(cliente, clienteObjetos, s, sitiosUR, sitiosSA));
 			}
 			//pool.shutdown();
 			
