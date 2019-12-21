@@ -10,6 +10,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import sistema.Sistema;
@@ -17,13 +18,14 @@ import sistema.Sistema;
 public class HiloSecundarioBibliotecario implements Runnable {
 	
 	//este hilo va ha serializar la lista y la va a enviar
+	private ServerSocket servidor;
 	private Socket cliente, clienteObjetos;
 	private Sitios sUR, sSA;
 	private Sistema s;
 	
-	public HiloSecundarioBibliotecario(Socket cliente, Socket clienteObjetos,Sistema s, Sitios sUR, Sitios sSA) {
+	public HiloSecundarioBibliotecario(ServerSocket servidor , Socket cliente, Sistema s, Sitios sUR, Sitios sSA) {
+		this.servidor = servidor;
 		this.cliente = cliente;
-		this.clienteObjetos = clienteObjetos;
 		this.s = s;
 		this.sUR = sUR;
 		this.sSA = sSA;
@@ -38,6 +40,9 @@ public class HiloSecundarioBibliotecario implements Runnable {
 			String leido;
 			//va todo en un bucle infinito para que se pueda realizar mas de una accion
 			while(true) {
+				//lo primero que tenemos que hacer es aceptar el nuevo cliente, que es el que se va ha encargar del objeto serializado
+				//lo acepatamos aqui para que se quede a la espera ya que se reasignara un socket cada vez que se quiera realizar esta accion
+				this.clienteObjetos = this.servidor.accept();
 				if((leido = bf.readLine()) != null) {
 					String[] mandato = leido.split(":");
 					if(mandato[0].equals("serializar")) {
@@ -124,7 +129,7 @@ public class HiloSecundarioBibliotecario implements Runnable {
 		try (FileOutputStream f = new FileOutputStream(nombreArchivo);
 				ObjectOutputStream oos = new ObjectOutputStream(f)){
 			oos.writeObject(s);
-			
+			oos.flush();
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();

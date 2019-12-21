@@ -44,10 +44,10 @@ public class InterfazBibliotecario extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public InterfazBibliotecario(int imagen, Socket cliente, Socket clienteObjetos) {
+	public InterfazBibliotecario(int imagen, Socket cliente) {
 		this.imagen = imagen;
 		this.cliente = cliente;		
-		this.clienteObjetos = clienteObjetos;
+		//this.clienteObjetos = clienteObjetos;
 		
 		setIconImage(Toolkit.getDefaultToolkit().getImage(InterfazBibliotecario.class.getResource("/imagenes/libro.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -126,11 +126,11 @@ public class InterfazBibliotecario extends JFrame {
 		
 		
 	}
-	public void run(int n, Socket c, Socket co) {
+	public void run(int n, Socket c) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazBibliotecario frame = new InterfazBibliotecario(n, c, co);
+					InterfazBibliotecario frame = new InterfazBibliotecario(n, c);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
