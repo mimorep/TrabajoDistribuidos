@@ -6,6 +6,7 @@ import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,6 +16,8 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -40,6 +43,7 @@ public class InterfazUsuarioNormal extends JFrame {
 	
 	private Socket cliente;
 	private JLabel lbError;
+	private int timeout;
 
 	public InterfazUsuarioNormal(int imagen, Socket cliete) {
 		
@@ -135,6 +139,37 @@ public class InterfazUsuarioNormal extends JFrame {
 	//metodo encargado de reservar un sitio
 	public void reservarSitio() {
 		//metodo que obtendra el numero que se introduce en el TF, para mandarlo al servidor he intentar reservar el sitio
+		String envio = "";
+		int sitio = Integer.parseInt(tFSitio.getText());
+		
+	
+		
+		DataOutputStream outSocket = null;
+		DataInputStream inSocket = null;
+		try {
+			this.cliente.setSoTimeout(0); //ponemos el timeout al maximo
+			
+			outSocket = new DataOutputStream(this.cliente.getOutputStream());
+			inSocket = new DataInputStream(this.cliente.getInputStream());
+			envio = "reservar:" +this.imagen + ":" + sitio + ":" + "\r\n";
+			
+			outSocket.writeBytes(envio);
+			outSocket.flush();
+			
+			//ahora tenemos que leer la respuesta del servidor para ver si se ha podido hacer la reserva
+			
+			String resultado = inSocket.readLine();
+			if(resultado.equals("OK")) {
+				//si llegamos a este punto es por que hemos logrado reservar los sitios
+				this.reload();
+			}else if(resultado.equals("ocupado")){
+				lbError.setVisible(true);
+			}
+		}catch(SocketException e) {
+			e.printStackTrace();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	//metodo encargado de actualizar la lista de reservas
@@ -154,7 +189,6 @@ public class InterfazUsuarioNormal extends JFrame {
 		
 		try {
 			outSocket = new DataOutputStream(this.cliente.getOutputStream());
-			inSocket = this.cliente.getInputStream();
 			
 			if(imagen == 0) {
 				ruta = "TrabajoDistribuidos\\src\\interfazUsuario\\SitiosUR.txt"; //ruta donde el cliente guardara el objeto serializado
@@ -168,6 +202,10 @@ public class InterfazUsuarioNormal extends JFrame {
 			outSocket.writeBytes(envio);
 			outSocket.flush();
 			
+			
+			inSocket = this.cliente.getInputStream();
+			this.cliente.setSoTimeout(100); //con esto evitaremos tener que cerrar el socket cada vez, asi sera mas eficiente el programa
+			
 			//ahora tenemos que leer el objeto serializado
 			byte buff[] = new byte[1024*32];
 			int leidos = inSocket.read(buff);
@@ -175,6 +213,8 @@ public class InterfazUsuarioNormal extends JFrame {
 				outFichero.write(buff, 0, leidos);
 				leidos = inSocket.read(buff);
 			}
+		}catch(SocketTimeoutException ee) {
+			System.out.println("Timepo de espera agotado \r\n");
 		}catch(IOException e) {
 			e.printStackTrace();
 		}

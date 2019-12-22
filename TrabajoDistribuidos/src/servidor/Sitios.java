@@ -16,13 +16,14 @@ public class Sitios implements Serializable {
 	
 	private ConcurrentHashMap<Integer, Usuario> sitios = new ConcurrentHashMap<Integer, Usuario>();
 	
-	public synchronized void addUsuario(int n, Usuario u) { //igual necesario hacer este metodo sincrono para que varios usuarios no puedan reservar el mismo sitio
+	public synchronized void reservarSitio(int n, Usuario u) { //igual necesario hacer este metodo sincrono para que varios usuarios no puedan reservar el mismo sitio
 		this.sitios.put(n, u);
 	}
 	public Boolean estaOcupado(int i) {
 		Boolean resultado = false;
-		if(this.sitios.get(i) != null) {
-			//si es distinto de null es por que el sitio esta ocupado
+		String nombre = this.sitios.get(i).getCuasi();
+		if(!nombre.equals("vacio")) {
+			//si es distinto de vacio es por que el sitio esta ocupado
 			resultado = true;
 		}
 		return resultado;

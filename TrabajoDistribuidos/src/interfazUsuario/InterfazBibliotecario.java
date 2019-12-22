@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -158,11 +159,8 @@ public class InterfazBibliotecario extends JFrame {
 		String ruta = "";
 		
 		try {
-			//hacemos esto para que cada vez que se pulse el socket se regenere
-			this.clienteObjetos = new Socket("localhost", 7777);
 			outSocket = new DataOutputStream(this.cliente.getOutputStream());
 			//de esta forma tenemos separandas la in de la out
-			inSocket = this.clienteObjetos.getInputStream();
 			
 			if(imagen == 0) {
 				ruta = "TrabajoDistribuidos\\src\\interfazUsuario\\SitiosUR.txt"; //ruta donde el cliente guardara el objeto serializado
@@ -176,6 +174,11 @@ public class InterfazBibliotecario extends JFrame {
 			outSocket.writeBytes(envio);
 			outSocket.flush();
 			
+			//hacemos esto para que cada vez que se pulse el socket se regenere
+			//this.clienteObjetos = new Socket("localhost", 7777);
+			inSocket = this.cliente.getInputStream();
+			this.cliente.setSoTimeout(100); //con esta orden limitamos el tiempo de espera asi no sera necesario cerrar el socket en cada iteracion y el programa sera mas eficiente
+			
 			//ahora tenemos que leer el objeto serializado
 			byte buff[] = new byte[1024*32];
 			int leidos = inSocket.read(buff);
@@ -183,10 +186,11 @@ public class InterfazBibliotecario extends JFrame {
 				outFichero.write(buff, 0, leidos);
 				leidos = inSocket.read(buff); //se nos esta quedando aqui bloqueado
 			}
+		}catch(SocketTimeoutException ee) {
+			System.out.println("tiempo de espera agotado \r\n");
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
-		
 		try(FileInputStream f = new FileInputStream(ruta);
 				ObjectInputStream ois = new ObjectInputStream(f)){
 			
@@ -210,36 +214,5 @@ public class InterfazBibliotecario extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-//		Sitios s = null;
-//		String ruta = "";
-//		if(imagen == 0) {
-//			ruta = "SitiosUR.txt";
-//		}else if(imagen == 1) {
-//			ruta = "SitiosSA.txt";
-//		}
-//		try(FileInputStream f = new FileInputStream(ruta);
-//				ObjectInputStream ois = new ObjectInputStream(f)){
-//			
-//			s = (Sitios) ois.readObject(); //cojemos la lista de sitios
-//			//manipulamos la lista de sitios como queramos
-//			String fin = "";
-//			for(int i=0;i<s.size();i++) {
-//				String texto = "Sitio "+ i +": " + s.getUsuario(i).getCuasi() + "\r\n";
-//				System.out.println(texto); //mostramos todos los usuarios
-//				fin = fin + texto;
-//			}
-//			this.textArea.setText(fin);
-//			
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (ClassNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 }

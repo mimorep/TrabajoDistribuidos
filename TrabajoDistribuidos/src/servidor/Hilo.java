@@ -8,6 +8,7 @@ import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import bd.Usuario;
 import sistema.Sistema;
 
 public class Hilo implements Runnable{
@@ -16,6 +17,7 @@ public class Hilo implements Runnable{
 	private Socket cliente;
 	private Sitios sUR, sSA;
 	private Sistema s;
+	private Usuario u;
 	
 	public Hilo(ServerSocket servidor ,Socket cliente, Sistema s, Sitios sUR, Sitios sSA) {
 		
@@ -63,6 +65,7 @@ public class Hilo implements Runnable{
 					//creariamos el hilo secundario
 					
 				}else if(usuario.contains("bibliotecari")) {
+					u = new Usuario(usuario, pwd, false, true);
 					respuesta = "isbiblio \r\n";
 					w.write(respuesta);
 					w.flush();
@@ -72,10 +75,11 @@ public class Hilo implements Runnable{
 					hb.run();
 					//creariamos el hilo secundario
 				}else {
+					u = new Usuario(usuario, pwd, false, false);
 					respuesta = "isnormal \r\n";
 					w.write(respuesta);
 					w.flush();
-					HiloSecundarioUsuarioNormal hn = new HiloSecundarioUsuarioNormal(cliente, s, sUR, sSA);
+					HiloSecundarioUsuarioNormal hn = new HiloSecundarioUsuarioNormal(cliente, s, sUR, sSA, u);
 					hn.run();
 					//creariamos el hilo secundario
 				}

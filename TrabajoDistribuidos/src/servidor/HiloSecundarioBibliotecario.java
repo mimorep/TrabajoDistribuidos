@@ -40,9 +40,7 @@ public class HiloSecundarioBibliotecario implements Runnable {
 			String leido;
 			//va todo en un bucle infinito para que se pueda realizar mas de una accion
 			while(true) {
-				//lo primero que tenemos que hacer es aceptar el nuevo cliente, que es el que se va ha encargar del objeto serializado
-				//lo acepatamos aqui para que se quede a la espera ya que se reasignara un socket cada vez que se quiera realizar esta accion
-				this.clienteObjetos = this.servidor.accept();
+				
 				if((leido = bf.readLine()) != null) {
 					String[] mandato = leido.split(":");
 					if(mandato[0].equals("serializar")) {
@@ -57,7 +55,7 @@ public class HiloSecundarioBibliotecario implements Runnable {
 							OutputStream outSocket = null;
 							try{
 								//siempre tenemos que declararlo en este orden, si no podriamos obtener un deadlock
-								outSocket = this.clienteObjetos.getOutputStream();
+								outSocket = this.cliente.getOutputStream();
 								inFich = new FileInputStream(fichero);
 								//leemos del fichero y lo vamos mandando
 								byte buff[] = new byte[1024*32];
@@ -66,14 +64,14 @@ public class HiloSecundarioBibliotecario implements Runnable {
 									outSocket.write(buff, 0, leidos);
 									leidos = inFich.read(buff);
 								}
+								outSocket.flush();
 								//si sale del bucle es por que hemos terminado de enviar lo que queriamos
-								//si mandamos aqui un -1 estaremos marcando que se ha terminado de enviar sin necesidad de cerrar el Socket asi lo podremos reusar para seguir mandando peticiones
 							}catch(IOException e) {
 								e.printStackTrace();
 							}finally {
-								if(outSocket != null||inFich != null) {
+								if(inFich != null) {
 									try {
-										outSocket.close();
+										//no cerramos nada del socket para poder reutilizarlo
 										inFich.close();
 									}catch(IOException e) {
 										e.printStackTrace();
@@ -97,13 +95,13 @@ public class HiloSecundarioBibliotecario implements Runnable {
 									outSocket.write(buff, 0, leidos);
 									leidos = inFich.read(buff);
 								}
+								outSocket.flush();
 							}catch(IOException e) {
 								e.printStackTrace();
 							}finally {
 								if(outSocket != null||inFich != null) {
 									try {
-										outSocket.close();
-										outSocket = this.cliente.getOutputStream();
+										//no cerramos nada del socket para poder reutilizarlo
 										inFich.close();
 									}catch(IOException e) {
 										e.printStackTrace();

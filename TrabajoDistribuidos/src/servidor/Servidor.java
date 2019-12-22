@@ -25,10 +25,10 @@ public class Servidor {
 		//construimso los mapas con todos los sitios de la bibloteca y con el usuario vacio para marcar que esta el sitio disponible
 		Usuario u = new Usuario("vacio", "", false, false);
 		for(int i=0;i<67;i++) {
-			sitiosUR.addUsuario(i, u);;
+			sitiosUR.reservarSitio(i, u);
 		}
 		for(int j=0;j<170;j++) {
-			sitiosSA.addUsuario(j, u);;
+			sitiosSA.reservarSitio(j, u);
 		}
 		
 //		serializarSitios(sitiosUR);

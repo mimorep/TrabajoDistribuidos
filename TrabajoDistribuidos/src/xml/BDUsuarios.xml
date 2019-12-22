@@ -9,6 +9,5 @@
   	<localizacion>Salamanca</localizacion>
   	<usuario cuasi="rootSalamanca" pwd="root"/><usuario cuasi="bibliotecariaS1" pwd="b1"/>
   	<usuario cuasi="jdivason" pwd="jn"/>
-  	<usuario cuasi="dagonzr" pwd="dn"/>
-  <usuario cuasi="nuevo" pwd="no"/></biblioteca>
+  	<usuario cuasi="dagonzr" pwd="dn"/></biblioteca>
 </baseDatosBibliotecas>
