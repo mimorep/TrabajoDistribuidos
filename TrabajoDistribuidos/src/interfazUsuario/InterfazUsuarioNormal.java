@@ -47,6 +47,7 @@ public class InterfazUsuarioNormal extends JFrame {
 	private JLabel lbReserva;
 	private int timeout;
 	private JLabel lbLogin;
+	private JTextField tfEmail;
 
 	public InterfazUsuarioNormal(int imagen, Socket cliete, String usuario) {
 		
@@ -62,7 +63,7 @@ public class InterfazUsuarioNormal extends JFrame {
 		contentPane.setLayout(null);
 		
 		tFSitio = new JTextField();
-		tFSitio.setBounds(301, 225, 288, 28);
+		tFSitio.setBounds(301, 225, 46, 28);
 		contentPane.add(tFSitio);
 		tFSitio.setColumns(10);
 		
@@ -133,6 +134,24 @@ public class InterfazUsuarioNormal extends JFrame {
 		lbLogin.setBounds(619, 33, 108, 14);
 		contentPane.add(lbLogin);
 		
+		tfEmail = new JTextField();
+		tfEmail.setBounds(490, 225, 210, 28);
+		contentPane.add(tfEmail);
+		tfEmail.setColumns(10);
+		
+		JLabel lblSiQuieresEnterarte = new JLabel("Email:");
+		lblSiQuieresEnterarte.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblSiQuieresEnterarte.setBounds(490, 186, 46, 14);
+		contentPane.add(lblSiQuieresEnterarte);
+		
+		JLabel lblRellenaEsteCampo = new JLabel("Rellena este campo si quires recivir un mensaje");
+		lblRellenaEsteCampo.setBounds(490, 256, 278, 14);
+		contentPane.add(lblRellenaEsteCampo);
+		
+		JLabel lblCuandoTuReserva = new JLabel("cuando tu reserva este a punto de finalizar");
+		lblCuandoTuReserva.setBounds(490, 281, 278, 14);
+		contentPane.add(lblCuandoTuReserva);
+		
 		btnLiberar.addActionListener(new ActionListener() {
 			
 			@Override
@@ -190,7 +209,10 @@ public class InterfazUsuarioNormal extends JFrame {
 		//metodo que obtendra el numero que se introduce en el TF, para mandarlo al servidor he intentar reservar el sitio
 		String envio = "";
 		int sitio = Integer.parseInt(tFSitio.getText());
-		
+		String email = "";
+		if(tfEmail.getText() != null && tfEmail.getText() != "") {
+			email = tfEmail.getText();
+		}
 	
 		DataOutputStream outSocket = null;
 		DataInputStream inSocket = null;
@@ -199,7 +221,7 @@ public class InterfazUsuarioNormal extends JFrame {
 			
 			outSocket = new DataOutputStream(this.cliente.getOutputStream());
 			inSocket = new DataInputStream(this.cliente.getInputStream());
-			envio = "reservar:" +this.imagen + ":" + sitio + ":" + "\r\n";
+			envio = "reservar:" +this.imagen + ":" + sitio + ":" + email + ":" +"\r\n";
 			
 			outSocket.writeBytes(envio);
 			outSocket.flush();

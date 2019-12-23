@@ -15,7 +15,17 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.Calendar;
+import java.util.Properties;
 import java.util.Timer;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import javax.swing.JOptionPane;
 
 import bd.Usuario;
 import sistema.Sistema;
@@ -140,8 +150,16 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 											//aqui añadiremos un timer para que se libere el sitio a los 30 mins
 											Timer timer = new Timer();
 											Calendar c = Calendar.getInstance();
+											Calendar cc = Calendar.getInstance();
 											c.add(Calendar.SECOND, 10);
-											//dentro de 10000 ms avisame 1 vez
+											cc.add(Calendar.SECOND, 7);
+											if(mandato.length>3) {
+												if(!mandato[3].equals("")) {
+													//un poco antes de que acabe se manda un correo informando
+													timer.schedule(new EmailSender(mandato[3], "Universidad de La Rioja", sitio), cc.getTime());
+												}
+											}
+											//dentro de 10s respecto del tiempo actual salta
 											timer.schedule(new AutoLiberarSitio(sUR, sitio), c.getTime());
 										}
 									}
@@ -179,8 +197,16 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 											this.sSA.reservarSitio(sitio, u);
 											Timer timer = new Timer();
 											Calendar c = Calendar.getInstance();
+											Calendar cc = Calendar.getInstance();
+											cc.add(Calendar.SECOND, 7);
 											c.add(Calendar.SECOND, 10);
-											//dentro de 10000 ms avisame 1 vez
+											if(mandato.length>3) {
+												if(!mandato[3].equals("")) {
+													//un poco antes de que acabe se manda un correo informando
+													timer.schedule(new EmailSender(mandato[3], "Universidad de Salamanca", sitio), cc.getTime());
+												}
+											}
+											//dentro de 10s respecto del tiempo actual salta
 											timer.schedule(new AutoLiberarSitio(sSA, sitio), c.getTime());
 										}
 									}
