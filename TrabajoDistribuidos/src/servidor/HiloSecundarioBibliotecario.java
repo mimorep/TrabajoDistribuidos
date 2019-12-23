@@ -11,8 +11,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 
 import bd.Usuario;
 import sistema.Sistema;
@@ -37,6 +39,7 @@ public class HiloSecundarioBibliotecario implements Runnable {
 	public void run() {
 		// TODO Auto-generated method stub
 		
+		InetAddress inet = this.cliente.getInetAddress();
 		//SIMPRE QUE ABRAMOS OUT/INPUTS TENEMOS QUE CREAR PRIMERO LOS OUT Y LUEGO LOS IN, si no estaremos causando un deadlock
 		try (BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));){
 			String leido;
@@ -161,7 +164,11 @@ public class HiloSecundarioBibliotecario implements Runnable {
 					}
 	 			}
 			}
-		} catch (IOException e) {
+		}catch(SocketException ee) {
+			if(inet != null) {
+				System.err.println("El cliente " + inet.toString() + " se ha desconectado");
+			}
+		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

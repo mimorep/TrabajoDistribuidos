@@ -11,7 +11,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.Calendar;
+import java.util.Timer;
 
 import bd.Usuario;
 import sistema.Sistema;
@@ -35,6 +39,8 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		
+		InetAddress inet = this.cliente.getInetAddress();
 		try (BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));){
 			String leido;
 			
@@ -131,6 +137,12 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 											//si el sitio no esta ocupado
 											respuesta = "OK \r\n";
 											this.sUR.reservarSitio(sitio, u);
+											//aqui añadiremos un timer para que se libere el sitio a los 30 mins
+											Timer timer = new Timer();
+											Calendar c = Calendar.getInstance();
+											c.add(Calendar.SECOND, 10);
+											//dentro de 10000 ms avisame 1 vez
+											timer.schedule(new AutoLiberarSitio(sUR, sitio), c.getTime());
 										}
 									}
 								}else {
@@ -165,6 +177,11 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 											//si el sitio no esta ocupado
 											respuesta = "OK \r\n";
 											this.sSA.reservarSitio(sitio, u);
+											Timer timer = new Timer();
+											Calendar c = Calendar.getInstance();
+											c.add(Calendar.SECOND, 10);
+											//dentro de 10000 ms avisame 1 vez
+											timer.schedule(new AutoLiberarSitio(sSA, sitio), c.getTime());
 										}
 									}
 								}else {
@@ -205,7 +222,11 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 					
 	 			}
 			}
-		} catch (IOException e) {
+		}catch(SocketException ee) {
+			if(inet != null) {
+				System.err.println("El cliente " + inet.toString() + " se ha desconectado");
+			}
+		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
