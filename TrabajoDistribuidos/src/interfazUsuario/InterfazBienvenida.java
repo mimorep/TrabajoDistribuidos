@@ -31,6 +31,7 @@ public class InterfazBienvenida extends JFrame {
 	private JLabel lbError;
 	
 	private int universidad;
+	private String usuario;
 
 	/**
 	 * Create the frame.
@@ -123,7 +124,7 @@ public class InterfazBienvenida extends JFrame {
 	//metodo que se va a encargar de mandar tanto el usuario como la contrasenia al servidor
 	public void mandarDatosAlServer() {
 		Socket cliente = null;
-		//Socket clienteObjetos = null;
+		this.usuario  = this.getUsuario();
 		DataOutputStream outSocket;
 		DataInputStream inSocket;
 		try {
@@ -147,15 +148,15 @@ public class InterfazBienvenida extends JFrame {
 			if(s.contains("isroot")) {
 				
 				System.out.println("Es un root");
-				InterfazRoot ir = new InterfazRoot(this.universidad, cliente);
-				ir.run(this.universidad, cliente);
+				InterfazRoot ir = new InterfazRoot(this.universidad, cliente, this.usuario);
+				ir.run(this.universidad, cliente, this.usuario);
 				this.setVisible(false);
 				
 			}else if(s.contains("isbiblio")){
 				
 				System.out.println("es un bilio");
-				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad, cliente);
-				ib.run(this.universidad, cliente);
+				InterfazBibliotecario ib = new InterfazBibliotecario(this.universidad, cliente, this.usuario);
+				ib.run(this.universidad, cliente, this.usuario);
 				this.setVisible(false);
 				
 			}else if(s.contains("notvalidated")){
@@ -166,8 +167,8 @@ public class InterfazBienvenida extends JFrame {
 				
 			}else {
 				System.out.println("es normal");
-				InterfazUsuarioNormal iu  = new InterfazUsuarioNormal(this.universidad, cliente);
-				iu.run(this.universidad, cliente);
+				InterfazUsuarioNormal iu  = new InterfazUsuarioNormal(this.universidad, cliente, this.usuario);
+				iu.run(this.universidad, cliente, this.usuario);
 				this.setVisible(false);
 			}
 		} catch (IOException e) {

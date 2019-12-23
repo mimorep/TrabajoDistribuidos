@@ -38,12 +38,13 @@ public class InterfazRoot extends JFrame {
 	private Boolean salir = false;
 	private String permisos = ""; //ponemos cadena vacia por que si no nos escribira null delante del nombre
 	private Socket cliente;
+	private JLabel lbLogin;
 	
 
 	/**
 	 * Create the frame.
 	 */
-	public InterfazRoot(int imagen, Socket cliente) {
+	public InterfazRoot(int imagen, Socket cliente, String usuario) {
 		
 		this.imagen = imagen;
 		this.cliente = cliente;
@@ -146,6 +147,10 @@ public class InterfazRoot extends JFrame {
 		Vacio.setVisible(false);
 		contentPane.add(Vacio);
 		
+		lbLogin = new JLabel("Login: " + usuario);
+		lbLogin.setBounds(605, 35, 101, 14);
+		contentPane.add(lbLogin);
+		
 		Vacio.addActionListener(new ActionListener() {
 			
 			@Override
@@ -155,11 +160,11 @@ public class InterfazRoot extends JFrame {
 		});
 	}
 	
-	public void run(int n, Socket c) {
+	public void run(int n, Socket c, String u) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazRoot frame = new InterfazRoot(n, c);
+					InterfazRoot frame = new InterfazRoot(n, c, u);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();

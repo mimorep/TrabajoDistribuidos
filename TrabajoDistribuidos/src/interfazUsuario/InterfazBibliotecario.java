@@ -1,10 +1,12 @@
 package interfazUsuario;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -41,11 +43,13 @@ public class InterfazBibliotecario extends JFrame {
 	
 	private Socket cliente, clienteObjetos;
 	private JButton btSitios;
+	private JLabel lbLogin;
+	private JLabel lbLiberar;
 
 	/**
 	 * Create the frame.
 	 */
-	public InterfazBibliotecario(int imagen, Socket cliente) {
+	public InterfazBibliotecario(int imagen, Socket cliente, String usuario) {
 		this.imagen = imagen;
 		this.cliente = cliente;		
 		//this.clienteObjetos = clienteObjetos;
@@ -98,11 +102,21 @@ public class InterfazBibliotecario extends JFrame {
 		lblNSitio.setVisible(false);
 		contentPane.add(lblNSitio);
 		
-		btnLiberar = new JButton("Liberarlo");
+		btnLiberar = new JButton("Liberar");
 		btnLiberar.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		btnLiberar.setBounds(272, 400, 133, 23);
 		btnLiberar.setVisible(false);
 		contentPane.add(btnLiberar);
+		
+		btnLiberar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				liberarSitio();
+				obtenerSitios();
+			}
+		});
 		
 		logo = new JLabel("");
 		if(imagen == 0) {
@@ -124,20 +138,65 @@ public class InterfazBibliotecario extends JFrame {
 		sb.setBounds(518, 189, 200, 263);
 		contentPane.add(sb);
 		
+		lbLogin = new JLabel("Login: " + usuario);
+		lbLogin.setBounds(585, 34, 151, 14);
+		contentPane.add(lbLogin);
+		
+		lbLiberar = new JLabel("");
+		lbLiberar.setBounds(136, 438, 372, 14);
+		lbLiberar.setVisible(false);
+		contentPane.add(lbLiberar);
+		
 		
 		
 	}
-	public void run(int n, Socket c) {
+	public void run(int n, Socket c, String u) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazBibliotecario frame = new InterfazBibliotecario(n, c);
+					InterfazBibliotecario frame = new InterfazBibliotecario(n, c, u);
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 		});
+	}
+	public void liberarSitio() {
+		this.lbLiberar.setVisible(false);
+		
+		String envio = "";
+		int sitio = Integer.parseInt(this.tFPosicion.getText());
+		
+		DataOutputStream outSocket = null;
+		DataInputStream inSocket = null;
+		
+		try {
+			outSocket = new DataOutputStream(this.cliente.getOutputStream());
+			inSocket = new DataInputStream(this.cliente.getInputStream());
+			
+			envio = "liberar:" + this.imagen + ":" +  sitio + ":\r\n";
+			outSocket.writeBytes(envio);
+			outSocket.flush();
+			
+			String respuesta = inSocket.readLine();
+			Font f = new Font("f", 3571, 14);
+			if(respuesta.equals("OK")) {
+				this.lbLiberar.setText("LIBERADO CON EXITO");
+				this.lbLiberar.setForeground(Color.blue);
+				this.lbLiberar.setFont(f);
+				this.lbLiberar.setVisible(true);
+			}else if(respuesta.equals("error")) {
+				this.lbLiberar.setText("ERROR AL RESERVAR, puede que estuviera ya vacio");
+				this.lbLiberar.setForeground(Color.red);
+				this.lbLiberar.setFont(f);
+				this.lbLiberar.setVisible(true);
+			}
+			
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		
 	}
 	public void mostrarLiberar() {
 		this.lblNSitio.setVisible(true);

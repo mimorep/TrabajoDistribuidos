@@ -40,12 +40,15 @@ public class InterfazUsuarioNormal extends JFrame {
 	private JTextField tFSitio;
 	private JTextArea textArea;
 	private JButton bReload;
+	private JButton btnLiberar;
 	
 	private Socket cliente;
 	private JLabel lbError;
+	private JLabel lbReserva;
 	private int timeout;
+	private JLabel lbLogin;
 
-	public InterfazUsuarioNormal(int imagen, Socket cliete) {
+	public InterfazUsuarioNormal(int imagen, Socket cliete, String usuario) {
 		
 		this.imagen = imagen;
 		this.cliente = cliete;
@@ -79,6 +82,7 @@ public class InterfazUsuarioNormal extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				// TODO Auto-generated method stub
 				reservarSitio();
+				reload();
 			}
 		});
 		
@@ -112,6 +116,32 @@ public class InterfazUsuarioNormal extends JFrame {
 		bReload.setBounds(135, 116, 28, 28);
 		contentPane.add(bReload);
 		
+		lbReserva = new JLabel("YA TIENES UNA RESERVA A TU NOMBRE");
+		lbReserva.setForeground(Color.RED);
+		lbReserva.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbReserva.setBounds(263, 371, 321, 14);
+		lbReserva.setVisible(false);
+		contentPane.add(lbReserva);
+		
+		btnLiberar = new JButton("Liberar");
+		btnLiberar.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		btnLiberar.setBounds(592, 367, 89, 23);
+		btnLiberar.setVisible(false);
+		contentPane.add(btnLiberar);
+		
+		lbLogin = new JLabel("Login: " + usuario);
+		lbLogin.setBounds(619, 33, 108, 14);
+		contentPane.add(lbLogin);
+		
+		btnLiberar.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				// TODO Auto-generated method stub
+				liberarSitio();
+				reload();
+			}
+		});
 		
 		bReload.addActionListener(new ActionListener() {
 			
@@ -123,11 +153,11 @@ public class InterfazUsuarioNormal extends JFrame {
 		});
 		
 	}
-	public void run(int n, Socket c) {
+	public void run(int n, Socket c, String u) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					InterfazUsuarioNormal frame = new InterfazUsuarioNormal(n, c);
+					InterfazUsuarioNormal frame = new InterfazUsuarioNormal(n, c, u);
 					frame.setVisible(true);
 					frame.obtenerSitios(); //para cargarlos de primeras
 				} catch (Exception e) {
@@ -136,6 +166,25 @@ public class InterfazUsuarioNormal extends JFrame {
 			}
 		});
 	}
+	//metodo que se encarga de liberar una reserva si el usuario lo desea
+	public void liberarSitio() {
+		String envio = "";
+		
+		DataOutputStream outSocket = null;
+		
+		try {
+			outSocket = new DataOutputStream(this.cliente.getOutputStream());
+			envio = "liberar:"+ this.imagen + ":" + "\r\n";
+			
+			outSocket.writeBytes(envio);
+			outSocket.flush();
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		this.lbReserva.setVisible(false);
+		this.btnLiberar.setVisible(false);
+		
+	}
 	//metodo encargado de reservar un sitio
 	public void reservarSitio() {
 		//metodo que obtendra el numero que se introduce en el TF, para mandarlo al servidor he intentar reservar el sitio
@@ -143,7 +192,6 @@ public class InterfazUsuarioNormal extends JFrame {
 		int sitio = Integer.parseInt(tFSitio.getText());
 		
 	
-		
 		DataOutputStream outSocket = null;
 		DataInputStream inSocket = null;
 		try {
@@ -161,9 +209,12 @@ public class InterfazUsuarioNormal extends JFrame {
 			String resultado = inSocket.readLine();
 			if(resultado.equals("OK")) {
 				//si llegamos a este punto es por que hemos logrado reservar los sitios
-				this.reload();
+				this.lbError.setVisible(false);
 			}else if(resultado.equals("ocupado")){
 				lbError.setVisible(true);
+			}else if(resultado.equals("tiene reserva")) {
+				this.lbReserva.setVisible(true);
+				this.btnLiberar.setVisible(true);
 			}
 		}catch(SocketException e) {
 			e.printStackTrace();

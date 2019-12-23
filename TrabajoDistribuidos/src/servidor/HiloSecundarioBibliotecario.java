@@ -1,6 +1,7 @@
 package servidor;
 
 import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -13,6 +14,7 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import bd.Usuario;
 import sistema.Sistema;
 
 public class HiloSecundarioBibliotecario implements Runnable {
@@ -110,7 +112,52 @@ public class HiloSecundarioBibliotecario implements Runnable {
 							}
 						}
 					}else if(mandato[0].equals("liberar")) {
-						//falta implementacion
+						String respuesta = "";
+						int sitio = Integer.parseInt(mandato[2]);
+						if(mandato[1].equals("0")) {
+							//estamos en la UR
+							if(0<sitio && sitio<this.sUR.getSitios().size()) {
+								//dentro de rango 
+								if(this.sUR.estaOcupado(sitio)) {
+									//si esta ocupado lo eliminamos
+									respuesta = "OK\r\n";
+									Usuario usuarioVacio = new Usuario("vacio", "", false, false);
+									this.sUR.getSitios().put(sitio, usuarioVacio);
+								}else {
+									//si no lo esta informamos mandando error
+									respuesta = "error\r\n";
+								}
+							}else {
+								//fuera de rango
+								respuesta = "error\r\n";
+							}
+						}else if(mandato[1].equals("1")) {
+							//estamos en al US
+							if(0<sitio && sitio<this.sSA.getSitios().size()) {
+								//dentro de rango
+								if(this.sSA.estaOcupado(sitio)) {
+									//si esta ocupado lo eliminamos
+									respuesta = "OK\r\n";
+									Usuario usuarioVacio = new Usuario("vacio", "", false, false);
+									this.sSA.getSitios().put(sitio, usuarioVacio);
+								}else {
+									//si no lo esta informamos mandando error
+									respuesta = "error\r\n";
+								}
+							}else {
+								//fuera de rango
+								respuesta = "error\r\n";
+							}
+						}
+						DataOutputStream outSocket = null;
+						try {
+							outSocket = new DataOutputStream(this.cliente.getOutputStream());
+							outSocket.writeBytes(respuesta);
+							outSocket.flush();
+							
+						}catch(IOException e) {
+							e.printStackTrace();
+						}
 					}
 	 			}
 			}

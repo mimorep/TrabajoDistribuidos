@@ -108,7 +108,6 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 							}
 						}
 					}else if(mandato[0].equals("reservar")) {
-						//falta implementacion
 						if(mandato[1].equals("0")) {
 							//es por que estamos en la UR
 							DataOutputStream outSocket = null;
@@ -116,13 +115,27 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 								String respuesta = "";
 								outSocket = new DataOutputStream(this.cliente.getOutputStream());
 								int sitio = Integer.parseInt(mandato[2]);
-								if(this.sUR.estaOcupado(sitio)) {
-									//si el sitio esta ocupado
-									respuesta = "ocupado\r\n";
+								//Lo primero es comprobar que ese sitio existe
+								if(0<sitio && sitio<this.sUR.getSitios().size()) {
+									//rango valido
+									//antes de esto debemos mirar si el usuario tiene ya una reserva
+									if(this.sUR.tienereserva(u)) {
+										//si tiene reserva
+										respuesta = "tiene reserva\r\n";
+									}else {
+										//si no tiene reserva
+										if(this.sUR.estaOcupado(sitio)) {
+											//si el sitio esta ocupado
+											respuesta = "ocupado\r\n";
+										}else {
+											//si el sitio no esta ocupado
+											respuesta = "OK \r\n";
+											this.sUR.reservarSitio(sitio, u);
+										}
+									}
 								}else {
-									//si el sitio no esta ocupado
-									respuesta = "OK \r\n";
-									this.sUR.reservarSitio(sitio, u);
+									//rango no valido
+									respuesta = "ocupado\r\n";
 								}
 								outSocket.writeBytes(respuesta);
 								outSocket.flush();
@@ -132,9 +145,64 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 							
 						}else if(mandato[1].equals("1")) {
 							//es por que estamos en la US
-							
+							DataOutputStream outSocket = null;
+							try {
+								String respuesta = "";
+								outSocket = new DataOutputStream(this.cliente.getOutputStream());
+								int sitio = Integer.parseInt(mandato[2]);
+								if(0<sitio && sitio<this.sSA.getSitios().size()) {
+									//rango valido
+									//antes de esto debemos mirar si el usuario tiene ya una reserva
+									if(this.sSA.tienereserva(u)) {
+										//si tiene reserva
+										respuesta = "tiene reserva\r\n";
+									}else {
+										//si no tiene reserva
+										if(this.sSA.estaOcupado(sitio)) {
+											//si el sitio esta ocupado
+											respuesta = "ocupado\r\n";
+										}else {
+											//si el sitio no esta ocupado
+											respuesta = "OK \r\n";
+											this.sSA.reservarSitio(sitio, u);
+										}
+									}
+								}else {
+									//rango no valido
+									respuesta = "ocupado\r\n";							
+								}
+
+								outSocket.writeBytes(respuesta);
+								outSocket.flush();
+							}catch(IOException e) {
+								e.printStackTrace();
+							}
+						}
+					}else if(mandato[0].equals("liberar")) {
+						//si hemos llegado aqui es por que si o si tiene un sitio que podemos liberar
+						if(mandato[1].equals("0")) {
+							//estamos en la UR
+							//buscamos el usuario en la lista y ponemos su sitio a vacio
+							for(int i=0;i<this.sUR.getSitios().size();i++) {
+								if(this.sUR.getSitios().get(i).getCuasi().equals(u.getCuasi())) {
+									//si coinciden las cuasis ponemos el sitio a vacio
+									Usuario usuarioVacio = new Usuario("vacio", "", false, false);
+									this.sUR.getSitios().put(i, usuarioVacio);
+								}
+							}
+						}else if(mandato[1].equals("1")){
+							//estamos en la US
+							//buscamos el usuario en la lista y ponemos su sitio a vacio
+							for(int i=0;i<this.sSA.getSitios().size();i++) {
+								if(this.sSA.getSitios().get(i).getCuasi().equals(u.getCuasi())) {
+									//si coinciden las cuasis ponemos el sitio a vacio
+									Usuario usuarioVacio = new Usuario("vacio", "", false, false);
+									this.sSA.getSitios().put(i, usuarioVacio);
+								}
+							}
 						}
 					}
+					
 	 			}
 			}
 		} catch (IOException e) {

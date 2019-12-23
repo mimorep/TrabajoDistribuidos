@@ -28,6 +28,16 @@ public class Sitios implements Serializable {
 		}
 		return resultado;
 	}
+	public Boolean tienereserva(Usuario u) {
+		Boolean respuesta = false;
+		for(int i=0;i<this.sitios.size();i++) {
+			if(this.sitios.get(i).getCuasi().equals(u.getCuasi())) {
+				//si coincide la cuasi es por que ya tiene reserva
+				respuesta = true;
+			}
+		}
+		return respuesta;
+	}
 	public Usuario getUsuario(int n) {
 		return this.sitios.get(n);
 	}
@@ -40,6 +50,8 @@ public class Sitios implements Serializable {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	
+	public ConcurrentHashMap<Integer, Usuario> getSitios(){
+		return this.sitios;
+	}
 	
 }
