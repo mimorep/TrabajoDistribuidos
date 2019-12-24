@@ -5,7 +5,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 import sistema.Sistema;
 
@@ -22,7 +24,7 @@ public class HiloSecundarioRoot implements Runnable {
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		
+		InetAddress inet = this.cliente.getInetAddress();
 		//SIMPRE QUE ABRAMOS OUT/INPUTS TENEMOS QUE CREAR PRIMERO LOS OUT Y LUEGO LOS IN, si no estaremos causando un deadlock
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));
 				Writer w =  new OutputStreamWriter(this.cliente.getOutputStream());){
@@ -62,7 +64,11 @@ public class HiloSecundarioRoot implements Runnable {
 			}
 
 			
-		} catch (IOException e) {
+		}catch(SocketException ee) {
+			if(inet != null) {
+				System.err.println("El cliente " + inet.toString() + " se ha desconectado");
+			}
+		}catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

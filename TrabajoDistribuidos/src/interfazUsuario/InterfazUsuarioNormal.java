@@ -144,7 +144,7 @@ public class InterfazUsuarioNormal extends JFrame {
 		lblSiQuieresEnterarte.setBounds(490, 186, 46, 14);
 		contentPane.add(lblSiQuieresEnterarte);
 		
-		JLabel lblRellenaEsteCampo = new JLabel("Rellena este campo si quires recivir un mensaje");
+		JLabel lblRellenaEsteCampo = new JLabel("Rellena este campo si quires recibir un mensaje");
 		lblRellenaEsteCampo.setBounds(490, 256, 278, 14);
 		contentPane.add(lblRellenaEsteCampo);
 		
@@ -206,6 +206,7 @@ public class InterfazUsuarioNormal extends JFrame {
 	}
 	//metodo encargado de reservar un sitio
 	public void reservarSitio() {
+		lbError.setVisible(false);
 		//metodo que obtendra el numero que se introduce en el TF, para mandarlo al servidor he intentar reservar el sitio
 		String envio = "";
 		int sitio = Integer.parseInt(tFSitio.getText());
