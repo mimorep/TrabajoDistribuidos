@@ -6,6 +6,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import bd.Usuario;
 
+//Clase que representa los sitios de una biblioteca
+//Basicamente se emplea para poder serializar el map de sitios
 public class Sitios implements Serializable {
 	
 	static final long serialVersionUID = 7;

@@ -30,6 +30,7 @@ import javax.swing.JOptionPane;
 import bd.Usuario;
 import sistema.Sistema;
 
+//Clase encargada de antender a los usuarios normales
 public class HiloSecundarioUsuarioNormal implements Runnable {
 	
 	private Socket cliente;
@@ -151,6 +152,7 @@ public class HiloSecundarioUsuarioNormal implements Runnable {
 											Timer timer = new Timer();
 											Calendar c = Calendar.getInstance();
 											Calendar cc = Calendar.getInstance();
+											//ESTOS TIEMPOS EN UNA SITUACION REAL SERIA MUCHO MAYORES, pero pongo esto para que se pueda apreciar que esta funcionando de forma correcta al liberarlos
 											c.add(Calendar.SECOND, 10);
 											cc.add(Calendar.SECOND, 7);
 											if(mandato.length>3) {

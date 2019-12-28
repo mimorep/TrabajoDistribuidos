@@ -11,6 +11,7 @@ import java.net.Socket;
 import bd.Usuario;
 import sistema.Sistema;
 
+//clase encargada de atender a todos los clientes que contacten con el servidor
 public class Hilo implements Runnable{
 	
 	private ServerSocket servidor;
@@ -53,13 +54,12 @@ public class Hilo implements Runnable{
 			System.out.println("Usuario: " + usuario);
 			System.out.println("Contrasenia: " + pwd);
 			
-			if(s.autenticarse(universidad, usuario, pwd)) {
+			if(s.autenticarse(universidad, usuario, pwd)) { //realiza la autenticacion del usuario
 				if(usuario.contains("root")) {
 					respuesta = "isroot \r\n";
 					//tenemos que mandar la respuesta justo despues por que si no el server se va ha quedar esperando a qeu el cliente mande algo, pero el cliente se va a quedar esperando a que el server le responda  --> interbloqueo
-					w.write(respuesta); //añadir el salto de linea
+					w.write(respuesta);
 					w.flush();
-					//posible problema a no poder hacer varias acciones a la vez, aqui es donde se esta cerrando el socket
 					HiloSecundarioRoot hr = new HiloSecundarioRoot(cliente, s); //llamamos al hilo secuandario para que realize el eliminar/aniadir
 					hr.run();
 					//creariamos el hilo secundario
@@ -69,21 +69,20 @@ public class Hilo implements Runnable{
 					respuesta = "isbiblio \r\n";
 					w.write(respuesta);
 					w.flush();
-					//tenemos que aceptar aqui el segundo socket, ya que solo en estos dos casos sera asignado, por eso le pasamos el servidor como parametro
-					//ERRORES AQUI SE QUEDA A LA ESPERA TODO EL RATO
+					//creariamos el hilo secundario
 					HiloSecundarioBibliotecario hb = new HiloSecundarioBibliotecario(servidor, cliente, s, sUR, sSA);
 					hb.run();
-					//creariamos el hilo secundario
 				}else {
 					u = new Usuario(usuario, pwd, false, false);
 					respuesta = "isnormal \r\n";
 					w.write(respuesta);
 					w.flush();
+					//creariamos el hilo secundario
 					HiloSecundarioUsuarioNormal hn = new HiloSecundarioUsuarioNormal(cliente, s, sUR, sSA, u);
 					hn.run();
-					//creariamos el hilo secundario
 				}
 			}else {
+				//caso en el que el usuario no esta registrado en la BD
 				respuesta = "notvalidated \r\n";
 				w.write(respuesta);
 				w.flush();

@@ -19,6 +19,7 @@ import java.net.SocketException;
 import bd.Usuario;
 import sistema.Sistema;
 
+//clase encargada de atender a los clientes bibliotecarios
 public class HiloSecundarioBibliotecario implements Runnable {
 	
 	//este hilo va ha serializar la lista y la va a enviar
@@ -174,7 +175,7 @@ public class HiloSecundarioBibliotecario implements Runnable {
 		}
 
 	}
-	
+	//metodo encargado de serializar una clase Sitios que se le esta pasando como parametro
 	public static void serializarSitios(Sitios s) {
 		String nombreArchivo = (s.getNombre().equals("sitiosUR"))? "TrabajoDistribuidos\\src\\servidor\\SitiosUR.txt":"TrabajoDistribuidos\\src\\servidor\\SitiosSA.txt";
 		

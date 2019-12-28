@@ -3,7 +3,7 @@
     <nombre>Universidad de la Rioja</nombre>
     <localizacion>La Rioja</localizacion>
     <usuario cuasi="rootRioja" pwd="root"/><usuario cuasi="bibliotecariaR1" pwd="b1"/><usuario cuasi="bibliotecariaR2" pwd="b2"/>
-  	<usuario cuasi="mimorep" pwd="mp"/><usuario cuasi="dirudiez" pwd="dz"/><usuario cuasi="jaclavij" pwd="jj"/><usuario cuasi="seleiva" pwd="sa"/><usuario cuasi="javi" pwd="javi"/></biblioteca>
+  	<usuario cuasi="mimorep" pwd="mp"/><usuario cuasi="dirudiez" pwd="dz"/><usuario cuasi="jaclavij" pwd="jj"/><usuario cuasi="javi" pwd="javi"/></biblioteca>
   <biblioteca>
   	<nombre>Universidad de Salamanca</nombre>
   	<localizacion>Salamanca</localizacion>

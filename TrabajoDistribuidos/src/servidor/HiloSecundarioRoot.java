@@ -11,6 +11,7 @@ import java.net.SocketException;
 
 import sistema.Sistema;
 
+//Clase encargada de atender a usuarios Root
 public class HiloSecundarioRoot implements Runnable {
 
 	private Socket cliente;
@@ -29,7 +30,7 @@ public class HiloSecundarioRoot implements Runnable {
 		try(BufferedReader bf = new BufferedReader(new InputStreamReader(this.cliente.getInputStream()));
 				Writer w =  new OutputStreamWriter(this.cliente.getOutputStream());){
 			String leido, orden, permisos, nombre, pwd, biblio;
-			//meter todo este proceso en un bucle para que pueda realizar mas de una sola accion
+			//se mete todo este proceso en un bucle para que pueda realizar mas de una sola accion, con el mismo Socket
 			while(true) {
 				if((leido = bf.readLine()) != null) {
 					String[] mandato = leido.split(":");
@@ -42,7 +43,7 @@ public class HiloSecundarioRoot implements Runnable {
 						if(!s.autenticarse(biblio, nombre, pwd)) {
 							//si no esta lo aniadirmos
 							s.aniadir(biblio, permisos+nombre, pwd);
-							w.write("Aniadio \r\n");
+							w.write("Aniadio\r\n");
 							w.flush();
 						}else {
 							w.write("no aniadido \r\n");
@@ -55,7 +56,7 @@ public class HiloSecundarioRoot implements Runnable {
 						biblio = mandato[3];
 						if(s.autenticarse(biblio, nombre, pwd)) { //comprobamos primero si esta para eliminarlo
 							s.eliminar(biblio, nombre);
-							w.write("eliminado \r\n");
+							w.write("eliminado\r\n");
 							w.flush();
 						}
 					}

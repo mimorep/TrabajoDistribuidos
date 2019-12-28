@@ -1,5 +1,6 @@
 package interfazUsuario;
 
+import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Toolkit;
@@ -38,7 +39,7 @@ public class InterfazRoot extends JFrame {
 	private Boolean salir = false;
 	private String permisos = ""; //ponemos cadena vacia por que si no nos escribira null delante del nombre
 	private Socket cliente;
-	private JLabel lbLogin;
+	private JLabel lbLogin, lErrorCorrecto;
 	
 
 	/**
@@ -88,26 +89,26 @@ public class InterfazRoot extends JFrame {
 		rdbRoot.setVisible(false);
 		contentPane.add(rdbRoot);
 		
-		rdbRoot.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ponerRoot();
-			}
-		});
+//		rdbRoot.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ponerRoot();
+//			}
+//		});
 		
 		rdbBibliotecario = new JRadioButton("Bibliotecario/a");
 		rdbBibliotecario.setBounds(633, 174, 109, 23);
 		rdbBibliotecario.setVisible(false);
 		contentPane.add(rdbBibliotecario);
-		
-		rdbBibliotecario.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				ponerBibliotecario();
-			}
-		});
+//		
+//		rdbBibliotecario.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent e) {
+//				ponerBibliotecario();
+//			}
+//		});
 		
 		tFNombre = new JTextField();
 		tFNombre.setBounds(522, 223, 169, 20);
@@ -150,6 +151,11 @@ public class InterfazRoot extends JFrame {
 		lbLogin = new JLabel("Login: " + usuario);
 		lbLogin.setBounds(605, 35, 101, 14);
 		contentPane.add(lbLogin);
+		
+		lErrorCorrecto = new JLabel("");
+		lErrorCorrecto.setBounds(522, 377, 231, 37);
+		lErrorCorrecto.setVisible(false);
+		contentPane.add(lErrorCorrecto);
 		
 		Vacio.addActionListener(new ActionListener() {
 			
@@ -205,6 +211,16 @@ public class InterfazRoot extends JFrame {
 		this.permisos = "bibliotecario";
 	}
 	public void eliminarAniadir() {
+		this.lErrorCorrecto.setVisible(false);
+		
+		if(rdbRoot.isSelected()) {
+			//si esta seleccionado ponemos que es un root
+			this.ponerRoot();
+		}else if(rdbBibliotecario.isSelected()) {
+			//lo mismo con el bibliotecario
+			this.ponerBibliotecario();
+		}
+		
 		//aqui usaremos el Socket que se nos pasa como parametro, no necesitamos crearlo de nuevo por que cuando se nos pasa ya esta creado y lo pasamos como parametro para que sea mas eficiente
 		String content = this.Vacio.getText();
 		String envio = "";
@@ -227,8 +243,34 @@ public class InterfazRoot extends JFrame {
 			}
 			outSocket.writeBytes(envio);
 			outSocket.flush();
+			
 			//ahora leemos para ver si se ha aniadido con exito
-			System.out.println(inSocket.readLine());
+			String respuesta = inSocket.readLine();
+			System.out.println(respuesta);
+			Font f = new Font("f", 3571, 14);
+			if(respuesta.equals("Aniadio")) {
+				
+				//si se ha aniadido con exito
+				this.lErrorCorrecto.setText("Añadidio correctamente");
+				this.lErrorCorrecto.setForeground(Color.blue);
+				this.lErrorCorrecto.setFont(f);
+				this.lErrorCorrecto.setVisible(true);
+			}else if(respuesta.equals("eliminado")){
+				//si se ha eliminado
+				this.lErrorCorrecto.setText("Eliminado con exito");
+				this.lErrorCorrecto.setForeground(Color.blue);
+				this.lErrorCorrecto.setFont(f);
+				this.lErrorCorrecto.setVisible(true);
+			}else {
+				//error
+				this.lErrorCorrecto.setText("Error al añadir");
+				this.lErrorCorrecto.setForeground(Color.red);
+				this.lErrorCorrecto.setFont(f);
+				this.lErrorCorrecto.setVisible(true);
+			}
+			
+			
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

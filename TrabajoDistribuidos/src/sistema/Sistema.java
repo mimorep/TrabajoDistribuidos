@@ -24,6 +24,7 @@ import org.xml.sax.SAXException;
 import bd.Biblioteca;
 import bd.Usuario;
 
+//Clase para manejar y manipular nuestro archivo XML (que sirve para simular una BD)
 public class Sistema {
 	
 	private List<Biblioteca> listaBibliotecas;
@@ -98,6 +99,7 @@ public class Sistema {
 			e.printStackTrace();
 		}
 	}
+	//Metodo que compruba si un usuario esta registrado en una biblioteca
 	public Boolean autenticarse(String nombreBiblioteca,String nombre, String pwd) {
 		Boolean resultado = false;
 		for(int i=0;i<this.listaBibliotecas.size();i++) {
@@ -112,6 +114,7 @@ public class Sistema {
 		}
 		return resultado;
 	}
+	//metodo que aniade un usuario a la BD (simula un INSERT)
 	public void aniadir(String nombreBiblioteca, String nombre, String pwd) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;
@@ -172,6 +175,7 @@ public class Sistema {
 		
 		
 	}
+	//metodo que elimina un usuario de la BD (simula un DELETE)
 	public void eliminar(String nombreBiblioteca, String nombre) {
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db;

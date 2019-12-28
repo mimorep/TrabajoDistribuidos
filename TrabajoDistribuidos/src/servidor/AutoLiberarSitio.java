@@ -4,6 +4,7 @@ import java.util.TimerTask;
 
 import bd.Usuario;
 
+//clase que hereda de timerTask encargada de liberar los sitios ocupados cuando se le indique
 public class AutoLiberarSitio extends TimerTask {
 
 	private Sitios s;

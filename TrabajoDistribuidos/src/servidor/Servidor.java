@@ -11,6 +11,7 @@ import java.util.concurrent.Executors;
 import bd.Usuario;
 import sistema.Sistema;
 
+//Clase encargada de atender a los clientes lanzando siempre un hilo para cada uno 
 public class Servidor {
 	
 	public static void main(String[] args) {
@@ -53,21 +54,5 @@ public class Servidor {
 		}
 		
 	}
-	//metodo al que llamaremos cada vez que queramos serializar un objeto del tipo Sitios
-//	public static void serializarSitios(Sitios s) {
-//		String nombreArchivo = (s.getNombre().equals("sitiosUR"))? "SitiosUR.txt":"SitiosSA.txt";
-//		
-//		try (FileOutputStream f = new FileOutputStream(nombreArchivo);
-//				ObjectOutputStream oos = new ObjectOutputStream(f)){
-//			oos.writeObject(s);
-//			
-//		} catch (FileNotFoundException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		} catch (IOException e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-//	}
 
 }

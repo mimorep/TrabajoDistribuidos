@@ -11,6 +11,7 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+//Clase que hereda de timerTask que va a ser la encargada de enviar un correo para avisar de que una reserva va a finalizar
 public class EmailSender extends TimerTask {
 	
 	private String destinatario, universidad;
